@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"image"
-	_ "image/jpg"
 	_ "image/png"
 	"os"
 )
@@ -24,12 +23,14 @@ func decodeImage(filename string) (image.Image, string, error) {
 }
 
 func main() {
-	img, format, err := decodeImage("chat.jpg")
+	img, format, err := decodeImage("cat.png")
 	if err != nil {
 		fmt.Println("Erreur lors du décodage de l'image:", err)
 		return
 	}
 
 	fmt.Printf("L'image décodée est au format: %s\n", format)
-	fmt.Println(img)
+	width := img.Bounds().Dx()
+	height := img.Bounds().Dy()
+	fmt.Printf("L'image est de taille: %d x %d\n", width, height)
 }
