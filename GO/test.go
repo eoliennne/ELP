@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"runtime"
+)
 
 func main() {
-	fmt.Println("HELLO")
+	numCPU := runtime.NumCPU()
+	fmt.Printf("Number of logical CPUs: %d\n", numCPU)
 }
