@@ -127,10 +127,8 @@ view model =
          div []
         [ h1 [] [text "Guess It !"]
         , h2 [] [text "Meaning"]
-        , div [] [text model.current_word.word] --affiche le mot pour l'instant
-        --ajout
         , viewDef model
-        --fin ajout
+        , viewSol model
         ,viewField model
         ]
 
@@ -156,8 +154,7 @@ viewField model = div []
         div [] [input [placeholder "Enter a word", value model.solution, onInput Change] []]
         , div [] [button [onClick GetSol] [text "Solution"]]
         , div [] [button [onClick GetNewWord] [text "Refresh"]]
-        , viewSol model
-        ]
+         ]
 
 viewSol : Model -> Html Msg
 viewSol model = 
