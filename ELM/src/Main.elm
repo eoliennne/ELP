@@ -8,28 +8,36 @@ import Html.Events exposing (onClick)
 import Html.Attributes exposing (placeholder,value)
 import Html.Events exposing (onInput)
 
---MAIN
+--FONCTIONS
 
+verifSol : String -> Model -> Bool
+verifSol str model = 
+    if str==model.current_word.word then True else False
+
+    --a changer : doit retourner un nouveau mot
+gotWord : Word
+gotWord = {word = "Help", meanings = [{wordtype = "type", definition = ["def2"]}]}
+
+
+--TYPES
+type alias Meanings = {wordtype:String, definition:(List String)}
+type alias Word = {word:String,meanings:(List Meanings)}
+
+--MAIN
+main : Program () Model Msg
 main =
   Browser.element { init = init, update = update, view = view, subscriptions = subscriptions }
 
-type alias Meanings = {wordtype:String, definition:(List String)}
-       
-type alias Word = {word:String,meanings:Meanings}
 
 
 
 --MODEL
---type Model = NewDefinition | SolutionJuste | SolutionFausse
 
 type alias Model = {current_word : Word, solution : String, statut : Status}
 type Status = Right | Wrong | NoSol
 
-gotWord : Word
-gotWord = {word = "Help", meanings = {wordtype = "type", definition = ["def2"]}}
-
 init : () -> (Model, Cmd Msg)
-init _ = ({current_word = {word = "Premier", meanings = {wordtype = "type", definition = ["def1"]}}, solution = "", statut = NoSol}, Cmd.none)
+init _ = ({current_word = {word = "Premier", meanings = [{wordtype = "type", definition = ["def1"]}]}, solution = "", statut = NoSol}, Cmd.none)
 
 type Msg = GetSol | GetNewWord | Change String
 
@@ -46,17 +54,6 @@ update msg model  =
     GetNewWord  -> ({model | current_word = gotWord, statut = NoSol}, Cmd.none)
 
 
-
-verifSol : String -> Model -> Bool
-verifSol str model = 
-    if str==model.current_word.word then True else False
-
-
-
---SUBSCRIPTIONS
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.none
 
 --VIEW
 
@@ -87,3 +84,7 @@ viewSol model =
 
 
 
+--SUBSCRIPTIONS
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
