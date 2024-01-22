@@ -1,12 +1,8 @@
-package flou
+package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
-	"image/png"
-	"log"
-	"os"
 )
 
 func meanPixel(xmin, xmax, ymin, ymax int, img image.Image) (colour color.RGBA) {
@@ -41,46 +37,46 @@ func convuint8(v uint32) uint8 {
 
 }
 
-func main() {
+// func main() {
 
-	// Decode the cat => image imgCat
-	imgCat, format, err := decodeImage("cat.png")
-	if err != nil {
-		fmt.Println("Erreur lors du décodage de l'image:", err)
-		return
-	}
+// 	// Decode the cat => image imgCat
+// 	imgCat, format, err := decodeImage("cat.png")
+// 	if err != nil {
+// 		fmt.Println("Erreur lors du décodage de l'image:", err)
+// 		return
+// 	}
 
-	fmt.Printf("L'image décodée est au format: %s\n", format)
-	width := imgCat.Bounds().Dx()
-	height := imgCat.Bounds().Dy()
-	fmt.Printf("L'image est de taille: %d x %d\n", width, height)
+// 	fmt.Printf("L'image décodée est au format: %s\n", format)
+// 	width := imgCat.Bounds().Dx()
+// 	height := imgCat.Bounds().Dy()
+// 	fmt.Printf("L'image est de taille: %d x %d\n", width, height)
 
-	// Low quality cat
+// 	// Low quality cat
 
-	// create new image
-	imgLQ := image.NewRGBA(image.Rect(0, 0, width, height))
+// 	// create new image
+// 	imgLQ := image.NewRGBA(image.Rect(0, 0, width, height))
 
-	RAD := 10
+// 	RAD := 10
 
-	for y := 10; y < height-10; y++ {
-		for x := 10; x <= width-10; x++ {
-			colour := meanPixel(x-RAD, x+RAD, y-RAD, y+RAD, imgCat)
-			imgLQ.Set(x, y, colour)
-		}
-	}
+// 	for y := 10; y < height-10; y++ {
+// 		for x := 10; x <= width-10; x++ {
+// 			colour := meanPixel(x-RAD, x+RAD, y-RAD, y+RAD, imgCat)
+// 			imgLQ.Set(x, y, colour)
+// 		}
+// 	}
 
-	// Create a new PNG file
-	fileLQ, err := os.Create("bad_cat.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer fileLQ.Close()
+// 	// Create a new PNG file
+// 	fileLQ, err := os.Create("bad_cat.png")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	defer fileLQ.Close()
 
-	// Encode the image to the PNG file
-	err = png.Encode(fileLQ, imgLQ)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Image created and saved as bad_cat.png")
+// 	// Encode the image to the PNG file
+// 	err = png.Encode(fileLQ, imgLQ)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	fmt.Println("Image created and saved as bad_cat.png")
 
-}
+// }
