@@ -5,7 +5,7 @@ module Main exposing (..)
 import Browser
 import Html exposing (..)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (placeholder,value)
+import Html.Attributes exposing (placeholder,value,style)
 import Html.Events exposing (onInput)
 import Http
 import Json.Decode exposing (Decoder, list, map2, string, int, field,at)
@@ -43,8 +43,7 @@ definitionDecoder =
 viewMeanings : Meanings -> Html Msg
 viewMeanings meanings =
   div []
-    [ div [] [ text ("Part of Speech: " ++ meanings.wordtype) ]
-    , div [] [ text "Definitions:" ]
+    [ div [] [ h3 [] [text  meanings.wordtype] ]
     , ul [] (List.map (\definition -> li [] [ text definition ]) meanings.definition)
     ]
     
@@ -126,7 +125,6 @@ view : Model -> Html Msg
 view model =
          div []
         [ h1 [] [text "Guess It !"]
-        , h2 [] [text "Meaning"]
         , viewDef model
         , viewSol model
         ,viewField model
@@ -144,7 +142,7 @@ viewDef model =
     Success chosenword ->
       div []
         [ div [] [ text ("Word: " ++ chosenword.word) ]
-        , div [] [ text "Meanings:" ]
+        , h2 [] [ text "Meanings" ]
         , ul [] (List.map viewMeanings chosenword.meanings)
         ]
 
