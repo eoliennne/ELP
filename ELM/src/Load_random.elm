@@ -30,7 +30,7 @@ init  _ =
   ( Loading
   , Http.get
       { url = "../static/thousand_words.json" 
-      , expect = Http.expectJson GotData firstDecoder
+      , expect = Http.expectJson GotData listeDecoder
       }
   )
 
@@ -77,8 +77,8 @@ view model =
 
 
 --FUNCTIONS
-firstDecoder : Decoder (List String)
-firstDecoder = at ["words"] (list string)
+listeDecoder : Decoder (List String)
+listeDecoder = at ["words"] (list string)
 
 errorToString : Http.Error -> String
 errorToString error =
