@@ -1,3 +1,3 @@
-module GO_ELP
+module GO
 
 go 1.21.5
