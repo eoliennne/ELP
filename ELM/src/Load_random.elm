@@ -4,6 +4,7 @@ import Json.Decode exposing (Decoder, list, map2, string, int, field,at)
 import Http
 import Html exposing (Html, button, div, text,pre,ul,li)
 import Browser
+import Random exposing (Generator, step)
 import Random.List exposing (choose)
 
 --MAIN
@@ -19,10 +20,9 @@ main =
 
 -- MODEL
 
-type Model
-  = Failure String
-  | Loading
-  | Success (List String)
+word = "troplefun"
+
+type Model = Loading | Current_word (Maybe String) | Failure String
 
 
 init : () -> (Model, Cmd Msg)
@@ -30,7 +30,7 @@ init  _ =
   ( Loading
   , Http.get
       { url = "../static/thousand_words.json" 
-      , expect = Http.expectJson GotData firstDecoder
+      , expect = Http.expectJson GotData listeDecoder
       }
   )
 
@@ -44,10 +44,14 @@ update msg model =
     GotData result ->
       case result of
           Ok data ->
-            (Success data, Cmd.none)
+            let
+              (chosenword,liste) = choose data
+            in
+              ((Current_word chosenword), Cmd.none)
 
           Err probleme ->
             (Failure (errorToString probleme), Cmd.none)
+    
 
 -- SUBSCRIPTIONS
 
@@ -68,13 +72,13 @@ view model =
     Loading ->
       text "Loading..."
 
-    Success liste ->   
-      pre [] [text (let (mot,nul) = (choose liste) in { model | hasard = mot })]
+    Current_word liste ->   
+      pre [] [text "Success!!"]
 
 
 --FUNCTIONS
-firstDecoder : Decoder (List String)
-firstDecoder = at ["words"] (list string)
+listeDecoder : Decoder (List String)
+listeDecoder = at ["words"] (list string)
 
 errorToString : Http.Error -> String
 errorToString error =
