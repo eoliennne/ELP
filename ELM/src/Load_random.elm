@@ -1,22 +1,17 @@
+module Load_random exposing (..)
+
 import Json.Decode exposing (Decoder, list, map2, string, int, field,at)
 import Http
 import Html exposing (Html, button, div, text,pre,ul,li)
 import Browser
-
---TYPES
-
-type alias Meanings = {wordtype:String, definition:(List String)}
-       
-type alias Word = {word:String,meanings:(List Meanings)}
-
+import Random.List exposing (choose)
 
 --MAIN
 
-first = "word"
 
 main =
   Browser.element
-    { init = init first
+    { init = init
     , update = update
     , subscriptions = subscriptions
     , view = view
@@ -27,14 +22,14 @@ main =
 type Model
   = Failure String
   | Loading
-  | Success Word
+  | Success (List String)
 
 
-init : String -> () -> (Model, Cmd Msg)
-init firstword _ =
+init : () -> (Model, Cmd Msg)
+init  _ =
   ( Loading
   , Http.get
-      { url = "https://api.dictionaryapi.dev/api/v2/entries/en/" ++ firstword
+      { url = "../static/thousand_words.json" 
       , expect = Http.expectJson GotData firstDecoder
       }
   )
@@ -42,7 +37,7 @@ init firstword _ =
 -- UPDATE
 
 type Msg
-  = GotData (Result Http.Error Word)
+  = GotData (Result Http.Error (List String))
 
 update msg model =
   case msg of
@@ -73,43 +68,14 @@ view model =
     Loading ->
       text "Loading..."
 
-    Success chosenword ->
-      div []
-        [ pre [] [ text "Word loaded!" ]
-        , div [] [ text ("Word: " ++ chosenword.word) ]
-        , div [] [ text "Meanings:" ]
-        , ul [] (List.map viewMeanings chosenword.meanings)
-        ]
+    Success liste ->   
+      pre [] [text (let (mot,nul) = (choose liste) in { model | hasard = mot })]
 
 
 --FUNCTIONS
+firstDecoder : Decoder (List String)
+firstDecoder = at ["words"] (list string)
 
-firstDecoder = at ["0"](categoryDecoder)
-
-categoryDecoder : Decoder Word
-categoryDecoder =
-    map2 Word
-        (field "word" string)
-        (field "meanings" (list meaningsDecoder))
-
-meaningsDecoder : Decoder Meanings
-meaningsDecoder =
-    map2 Meanings
-        (field "partOfSpeech" string)
-        (field "definitions" (list definitionDecoder))
-
-definitionDecoder : Decoder String
-definitionDecoder = 
-    field "definition" string
-    
-viewMeanings : Meanings -> Html Msg
-viewMeanings meanings =
-  div []
-    [ div [] [ text ("Part of Speech: " ++ meanings.wordtype) ]
-    , div [] [ text "Definitions:" ]
-    , ul [] (List.map (\definition -> li [] [ text definition ]) meanings.definition)
-    ]
-    
 errorToString : Http.Error -> String
 errorToString error =
     case error of
