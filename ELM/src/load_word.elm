@@ -1,19 +1,18 @@
-import Json.Decode as D
+import Json.Decode exposing (Decoder, list, map2, string, int, field,at)
 import Http
-import Html exposing (Html, button, div, text,pre)
+import Html exposing (Html, button, div, text,pre,ul,li)
 import Browser
 
 --TYPES
--- type stockant la nature et les définitions correspondantes d'un mot
-type alias Definition = {wordtype:String, meaning:(List String)}
--- Registre stockant un mot et toutes ses définitions         
-type alias Word = {word:String,definition:Definition}
 
+type alias Meanings = {wordtype:String, definition:(List String)}
+       
+type alias Word = {word:String,meanings:(List Meanings)}
 
 
 --MAIN
 
-first = "potato"
+first = "word"
 
 main =
   Browser.element
@@ -26,9 +25,9 @@ main =
 -- MODEL
 
 type Model
-  = Failure
+  = Failure String
   | Loading
-  | Success String
+  | Success Word
 
 
 init : String -> () -> (Model, Cmd Msg)
@@ -36,14 +35,14 @@ init firstword _ =
   ( Loading
   , Http.get
       { url = "https://api.dictionaryapi.dev/api/v2/entries/en/" ++ firstword
-      , expect = Http.expectString GotData
+      , expect = Http.expectJson GotData firstDecoder
       }
   )
 
 -- UPDATE
 
 type Msg
-  = GotData (Result Http.Error String)
+  = GotData (Result Http.Error Word)
 
 update msg model =
   case msg of
@@ -52,8 +51,8 @@ update msg model =
           Ok data ->
             (Success data, Cmd.none)
 
-          Err _ ->
-            (Failure, Cmd.none)
+          Err truc ->
+            (Failure (errorToString truc), Cmd.none)
 
 -- SUBSCRIPTIONS
 
@@ -68,18 +67,63 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
   case model of
-    Failure ->
-      text "I was unable to load the JSON."
+    Failure message->
+      text message
 
     Loading ->
       text "Loading..."
 
-    Success fullText ->
-      pre [] [ text fullText ]
+    Success chosenword ->
+      div []
+        [ pre [] [ text "Word loaded!" ]
+        , div [] [ text ("Word: " ++ chosenword.word) ]
+        , div [] [ text "Meanings:" ]
+        , ul [] (List.map viewMeanings chosenword.meanings)
+        ]
 
-wordDecoder =
-  map2 Word
-    (field "word" string)
-    (field "source" string)
-    (field "author" string)
-    (field "year" int)
+
+--FUNCTIONS
+
+firstDecoder = at ["0"](categoryDecoder)
+
+categoryDecoder : Decoder Word
+categoryDecoder =
+    map2 Word
+        (field "word" string)
+        (field "meanings" (list meaningsDecoder))
+
+meaningsDecoder : Decoder Meanings
+meaningsDecoder =
+    map2 Meanings
+        (field "partOfSpeech" string)
+        (field "definitions" (list definitionDecoder))
+
+definitionDecoder : Decoder String
+definitionDecoder = 
+    field "definition" string
+    
+viewMeanings : Meanings -> Html Msg
+viewMeanings meanings =
+  div []
+    [ div [] [ text ("Part of Speech: " ++ meanings.wordtype) ]
+    , div [] [ text "Definitions:" ]
+    , ul [] (List.map (\definition -> li [] [ text definition ]) meanings.definition)
+    ]
+    
+errorToString : Http.Error -> String
+errorToString error =
+    case error of
+        Http.BadUrl url ->
+            "The URL " ++ url ++ " was invalid"
+        Http.Timeout ->
+            "Unable to reach the server, try again"
+        Http.NetworkError ->
+            "Unable to reach the server, check your network connection"
+        Http.BadStatus 500 ->
+            "The server had a problem, try again later"
+        Http.BadStatus 400 ->
+            "Verify your information and try again"
+        Http.BadStatus x ->
+            "Unknown error with status " ++ (String.fromInt x)
+        Http.BadBody errorMessage ->
+            errorMessage
