@@ -5,7 +5,7 @@ import (
 	"runtime"
 )
 
-func main() {
+func NbCPU() {
 	numCPU := runtime.NumCPU()
 	fmt.Printf("Number of logical CPUs: %d\n", numCPU)
 }

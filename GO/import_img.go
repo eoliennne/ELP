@@ -55,15 +55,17 @@ func Bord(x, y, r int, img image.Image) (xmin, xmax, ymin, ymax int) {
 	return
 }
 
-func main() {
-	img, format, err := decodeImage("cat.png")
+func ImportImg(nom string) (image.Image, int, int) {
+	img, format, err := decodeImage(nom)
 	if err != nil {
 		fmt.Println("Erreur lors du décodage de l'image:", err)
-		return
+		return nil, 0, 0
 	}
 
 	fmt.Printf("L'image décodée est au format: %s\n", format)
 	width := img.Bounds().Dx()
 	height := img.Bounds().Dy()
 	fmt.Printf("L'image est de taille: %d x %d\n", width, height)
+
+	return img, width, height
 }
