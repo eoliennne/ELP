@@ -4,9 +4,8 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (placeholder,value,style)
-import Html.Events exposing (onInput)
 import Http
 import Json.Decode exposing (Decoder, list, map2, string, int, field,at)
 
@@ -17,8 +16,8 @@ verifSol str model =
     if str==model.current_word.word then True else False
 
     --a changer : doit retourner un nouveau mot
-gotWord : Word
-gotWord = {word = "Help", meanings = [{wordtype = "type", definition = ["def2"]}]}
+new_word : Word
+new_word = {word = "Help", meanings = [{wordtype = "type", definition = ["def2"]}]}
 
 
 
@@ -102,15 +101,18 @@ init _ = (firstModel
 
 
 --UPDATE
-type Msg = GetSol | GetNewWord | Change String | GotData (Result Http.Error Word)
+type Msg = GetSol | GetNewWord | CheckAns String | GotData (Result Http.Error Word)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model  =
   case msg of
-    Change newContent-> ({model | solution = newContent}, Cmd.none)
+    CheckAns newContent-> ({model | solution = newContent}, Cmd.none)
     GetSol ->  if (verifSol model.solution model) then ({model | statut = Right},Cmd.none)
                     else ({model | statut = Wrong}, Cmd.none)
-    GetNewWord  -> ({model | current_word = gotWord, statut = NoSol}, Cmd.none)
+    GetNewWord  -> ({model | current_word = new_word, statut = NoSol}, Http.get
+      { url = "https://api.dictionaryapi.dev/api/v2/entries/en/" ++ model.current_word.word
+      , expect = Http.expectJson GotData firstDecoder
+      })
     GotData result -> case result of
           Ok data ->
             ({model | load = Success data}, Cmd.none)
@@ -141,15 +143,15 @@ viewDef model =
 
     Success chosenword ->
       div []
-        [ div [] [ text ("Word: " ++ chosenword.word) ]
-        , h2 [] [ text "Meanings" ]
+        [ --div [] [ text ("Word: " ++ chosenword.word) ]
+         h2 [] [ text "Meanings" ]
         , ul [] (List.map viewMeanings chosenword.meanings)
         ]
 
 viewField : Model -> Html Msg
 viewField model = div []
         [
-        div [] [input [placeholder "Enter a word", value model.solution, onInput Change] []]
+        div [] [input [placeholder "Enter a word", value model.solution, onInput CheckAns] []]
         , div [] [button [onClick GetSol] [text "Solution"]]
         , div [] [button [onClick GetNewWord] [text "Refresh"]]
          ]
