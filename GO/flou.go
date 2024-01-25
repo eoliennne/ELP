@@ -6,6 +6,20 @@ import (
 )
 
 func meanPixel(xmin, xmax, ymin, ymax int, img image.Image) (colour color.RGBA) {
+
+	// meanPixel est la fonction qui permet de calculer pour un pixel de l'image
+	// ses composantes une fois le flou appliqué
+	//
+	// Parameters:
+	//   xmin (int): définition du rayon max considéré pour le calcul du flou
+	//   xmax (int): -
+	//	 ymin (int): -
+	//   ymax (int): -
+	//
+	//
+	// Returns:
+	//   color.RGBA: les composantes couleurs et alpha du pixel une fois le flou calculé
+
 	var r, g, b, a uint32 = 0, 0, 0, 0
 
 	var NB_PIXELS uint32 = 0

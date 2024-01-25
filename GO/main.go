@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "GO/decode_img"
 	"fmt"
 	"image"
 	"image/png"
@@ -28,7 +29,7 @@ func main() {
 	fmt.Println("Quel est l'adresse du fichier que vous souhaitez flouter?")
 	fmt.Scanf("%s", &in_file)
 
-	img, width, height := ImportImg(in_file) //ou copier coller le code d'import_img direct ?
+	img, width, height := DecodeImage(in_file) //ou copier coller le code d'import_img direct ?
 
 	// Définition du rayon de flou
 	var rad_percent int

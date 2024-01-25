@@ -1,6 +1,18 @@
 package main
 
 func Decoupage(n, width, height int) [][]int {
+	// Decoupage est une fonction qui permet de découper l'image en différentes zones
+	// pour que chacune puisse être traiter par une goroutine
+	//
+	// Parameters:
+	//   n (int): le nombre de tranches qui vont être crées
+	//   width (int): la largeur (pixel) de l'image à découper
+	//	 height (int): la hauteur (pixel) de l'image à découper
+	//
+	// Returns:
+	//   [][]int : tableau d'entier correspondant aux coordonnées de jsplusquoi
+	//
+
 	var list [][]int //ligne = tranche, list[] = [xinf, xsup, yinf, ysup]
 
 	if width >= height {
