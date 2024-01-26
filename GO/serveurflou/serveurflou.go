@@ -11,8 +11,9 @@ func Update(rad, xinf, xsup, yinf, ysup int, imgNew *image.RGBA, img image.Image
 	//lance meanPixel sur tous les pixels d'une tranche
 	for x := xinf; x <= xsup; x++ {
 		for y := yinf; y <= ysup; y++ {
+			var xmin, xmax, ymin, ymax = Bord(x, y, rad, img)
 
-			color := meanPixel(x-rad, x+rad, y-rad, y+rad, img)
+			color := meanPixel(xmin, xmax, ymin, ymax, img)
 			imgNew.Set(x, y, color)
 
 		}
@@ -49,7 +50,7 @@ func Decoupage(n, width, height int) [][]int {
 			//print(list[i])
 		}
 		var arr []int
-		arr = append(arr, min, max+reste)
+		arr = append(arr, min, max+reste, 0, height-1)
 		list = append(list, arr)
 	}
 	if height > width {
@@ -66,7 +67,7 @@ func Decoupage(n, width, height int) [][]int {
 			print(list[i])
 		}
 		var arr []int
-		arr = append(arr, min, max+reste)
+		arr = append(arr, 0, width-1, min, max+reste)
 		list = append(list, arr)
 	}
 
