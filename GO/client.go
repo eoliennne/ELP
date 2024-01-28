@@ -25,27 +25,31 @@ func main() {
 	defer conn.Close()
 
 	flou, _ := strconv.Atoi(os.Args[2])
-	Choix_flou(conn, flou)
+	if flou > 100 || flou < 1 {
+		fmt.Println("Erreur, le flou demandé est invalide")
+		return
+	}
+	EnvoiFlou(conn, flou)
 
 	img, _, err := decode_img.DecodeImage(os.Args[1])
 	if err != nil {
 		fmt.Println("Erreur lors du décodage de l'image:", err)
 		return
 	}
+
 	serveurflou.EnvoiImage(conn, img)
 	imgNew, _ := serveurflou.Reception_img(conn)
 	crea_fichier(imgNew)
 
 }
 
-func Choix_flou(conn net.Conn, in_rad int) {
+func EnvoiFlou(conn net.Conn, in_rad int) {
 	// EnvoiFlou permet de gérer l'envoi du niveau de flou demandé au serveur
 	//
 	// Parameters:
 	// 	 conn (net.conn): la connexion au serveur
 	// 	 in_rad (int): le degré de flou demandé
 
-	//writer := bufio.NewWriter(conn)
 	_, err := io.WriteString(conn, fmt.Sprintf("%d\n", in_rad))
 	if err != nil {
 		fmt.Println("Erreur lors de l'envoi du flou:", err)
@@ -56,14 +60,25 @@ func Choix_flou(conn net.Conn, in_rad int) {
 }
 
 func crea_fichier(imgNew image.Image) {
-	// Création du png sortie
-	out_file, err := os.Create("image_floue.png")
+	// Cette fonction permet de créer un fichier contenant l'image floutée
+	//
+	// Parameters:
+	// 	 imgNew (image.Image): image qui va être encodée dans le fichier créé
+	//
+	var filename string
+	if len(os.Args) < 4 {
+		filename = "image_floue.png"
+	} else {
+		filename = os.Args[3] + ".png"
+	}
+
+	out_file, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer out_file.Close()
 
-	// Encodage de l'image dans un png
+	// Encodage de l'image dans un nouveau png
 	err = png.Encode(out_file, imgNew)
 	if err != nil {
 		log.Fatal(err)

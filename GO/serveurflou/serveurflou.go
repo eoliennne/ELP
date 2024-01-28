@@ -3,33 +3,30 @@ package serveurflou
 import (
 	_ "GO/decode_img"
 	"bytes"
+	"encoding/gob"
 	"fmt"
 	"image"
 	"image/color"
 	"image/png"
 	_ "image/png"
-	"io"
 	"net"
 )
 
 func EnvoiImage(conn net.Conn, imag image.Image) {
-	// EnvoiImage permet de gérer l'envoi de l'image que le client veut flouter au serveur application
+	// EnvoiImage permet de gérer l'envoi d'une image
 	//
 	// Parameters:
-	// 	 conn (net.conn): la connexion au serveur
-	// Import de l'image
-	var err error
+	//   conn (net.Conn): la connexion client/serveur
 
-	buffer := new(bytes.Buffer)
-	err = png.Encode(buffer, imag)
+	var buf bytes.Buffer
+	err := png.Encode(&buf, imag)
 	if err != nil {
 		fmt.Println("Erreur lors de l'encodage de l'image:", err)
 		return
 	}
 
-	reader := bytes.NewReader(buffer.Bytes())
-	_, err = io.Copy(conn, reader)
-	if err != nil {
+	encoder := gob.NewEncoder(conn)
+	if err := encoder.Encode(buf.Bytes()); err != nil {
 		fmt.Println("Erreur lors de l'envoi de l'image:", err)
 		return
 	}
@@ -46,24 +43,22 @@ func Reception_img(conn net.Conn) (image.Image, error) {
 	// Returns:
 	//   image.Image : l'image reçue  au format image.Image
 	//
-	fmt.Println("Fonction lancée")
-	received := new(bytes.Buffer)
-	_, err := io.Copy(received, conn)
-
-	if err != nil {
+	var buf []byte
+	decoder := gob.NewDecoder(conn)
+	if err := decoder.Decode(&buf); err != nil {
 		fmt.Println("Erreur lors de la réception de l'image:", err)
 		return nil, err
 	}
 
 	fmt.Println("Image Reçue.")
 
-	img, _, err := image.Decode(received)
+	img, _, err := image.Decode(bytes.NewReader(buf))
 	if err != nil {
 		fmt.Println("Erreur lors du décodage de l'image:", err)
 		return nil, err
 	}
 
-	return img, err
+	return img, nil
 }
 
 func Update(rad, xinf, xsup, yinf, ysup int, imgNew *image.RGBA, img image.Image, ch chan int) {
@@ -90,7 +85,6 @@ func Update(rad, xinf, xsup, yinf, ysup int, imgNew *image.RGBA, img image.Image
 		}
 	}
 	ch <- 1
-	fmt.Println("Une goroutine a fini son travail")
 }
 
 func Decoupage(n, width, height int) [][]int {
@@ -109,9 +103,9 @@ func Decoupage(n, width, height int) [][]int {
 	var list [][]int
 
 	if width >= height {
-		//découpage en colonnes
 
-		bande := width/n - 1 //faire division euclidienne
+		//découpage en colonnes
+		bande := width/n - 1
 		reste := width % n
 		var min, max int = 0, bande
 
@@ -126,8 +120,9 @@ func Decoupage(n, width, height int) [][]int {
 		list = append(list, arr)
 	}
 	if height > width {
+
 		//découpage en lignes
-		bande := height/n - 1 //faire division euclidienne
+		bande := height/n - 1
 		reste := height % n
 		var min, max int = 0, bande
 
@@ -136,7 +131,6 @@ func Decoupage(n, width, height int) [][]int {
 			arr = append(arr, 0, width-1, min, max)
 			list = append(list, arr)
 			min, max = max+1, max+bande+1
-			print(list[i])
 		}
 		var arr []int
 		arr = append(arr, 0, width-1, min, max+reste)
