@@ -2,23 +2,16 @@ package main
 
 import (
 	"GO/serveurflou"
-	_ "GO/serveurflou"
 	"bufio"
-	"bytes"
 	"fmt"
 	"image"
-	"image/png"
-	"io"
-	"log"
 	"net"
-	"os"
-	"runtime"
 )
 
 func main() {
 	// Attente de connexion
 	network := "tcp"
-	address := "localhost:8080"
+	address := "localhost:8090"
 	listener, err := net.Listen(network, address)
 	if err != nil {
 		fmt.Println("Erreur lors de l'ouverture du serveur:", err)
@@ -41,35 +34,6 @@ func main() {
 		go Session(conn)
 
 	}
-}
-
-func Reception_img(conn net.Conn) (image.Image, error) {
-	// Reception permet de gérer la réception de l'image envoyée par le client
-	//
-	// Parameters:
-	//   conn (net.Conn): la connexion définie avec le client courant
-	//
-	// Returns:
-	//   image.Image : l'image reçue  au format image.Image
-	//
-
-	received := new(bytes.Buffer)
-	_, err := io.Copy(received, conn)
-
-	if err != nil {
-		fmt.Println("Erreur lors de la réception de l'image:", err)
-		return nil, err
-	}
-
-	fmt.Println("Image Reçue.")
-
-	img, _, err := image.Decode(received)
-	if err != nil {
-		fmt.Println("Erreur lors du décodage de l'image:", err)
-		return nil, err
-	}
-
-	return img, err
 }
 
 func Reception_flou(conn net.Conn) int {
@@ -103,8 +67,8 @@ func Session(conn net.Conn) {
 
 	fmt.Println("Session ouverte pour le client:", conn.RemoteAddr())
 	rad := Reception_flou(conn)
-	img, _ := Reception_img(conn)
 
+	img, _ := serveurflou.Reception_img(conn)
 	width := img.Bounds().Dx()
 	height := img.Bounds().Dy()
 
@@ -112,39 +76,28 @@ func Session(conn net.Conn) {
 
 	// Lancement des goroutines et création du channel vérifiant leur état
 	// les routines envoient un au channel 1 lorsqu'elles ont fini leur travail
-	nb_routines := runtime.NumCPU()
+	nb_routines := 2          // runtime.NumCPU()
 	buffer := nb_routines + 2 // au cas où
 	ch := make(chan int, buffer)
 
 	// défintion des parties de l'image qui vont chacune être traitées dans une goroutine
 	tranches := serveurflou.Decoupage(nb_routines, width, height)
 
+	fmt.Println("Lancement des goroutines")
+	// Lancement des goroutines pour chaque tranche
 	for t := 0; t < nb_routines; t++ {
 		var xinf, xsup, yinf, ysup int = tranches[t][0], tranches[t][1], tranches[t][2], tranches[t][3]
-
 		go serveurflou.Update(rad, xinf, xsup, yinf, ysup, imgNew, img, ch)
 
 	}
-
+	fmt.Println("attente des goroutines")
 	// boucle qui tourne jusqu'à ce qu'elle ait reçu les signaux de fin de toutes les routines
 	for compteur := 0; compteur < nb_routines; {
 		_ = <-ch
 		compteur += 1
 	}
-
-	// Création du png sortie
-	out_file, err := os.Create("output.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer out_file.Close()
-
-	// Encodage de l'image dans le png
-	err = png.Encode(out_file, imgNew)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Image traitée dans output.png")
+	fmt.Println("Fin des goroutines")
+	// Envoi de l'image floue au client
+	serveurflou.EnvoiImage(conn, imgNew)
 
 }

@@ -2,10 +2,69 @@ package serveurflou
 
 import (
 	_ "GO/decode_img"
+	"bytes"
+	"fmt"
 	"image"
 	"image/color"
+	"image/png"
 	_ "image/png"
+	"io"
+	"net"
 )
+
+func EnvoiImage(conn net.Conn, imag image.Image) {
+	// EnvoiImage permet de gérer l'envoi de l'image que le client veut flouter au serveur application
+	//
+	// Parameters:
+	// 	 conn (net.conn): la connexion au serveur
+	// Import de l'image
+	var err error
+
+	buffer := new(bytes.Buffer)
+	err = png.Encode(buffer, imag)
+	if err != nil {
+		fmt.Println("Erreur lors de l'encodage de l'image:", err)
+		return
+	}
+
+	reader := bytes.NewReader(buffer.Bytes())
+	_, err = io.Copy(conn, reader)
+	if err != nil {
+		fmt.Println("Erreur lors de l'envoi de l'image:", err)
+		return
+	}
+
+	fmt.Println("Envoi de l'image terminé.")
+}
+
+func Reception_img(conn net.Conn) (image.Image, error) {
+	// Reception permet de gérer la réception de l'image envoyée par le client
+	//
+	// Parameters:
+	//   conn (net.Conn): la connexion définie avec le client courant
+	//
+	// Returns:
+	//   image.Image : l'image reçue  au format image.Image
+	//
+	fmt.Println("Fonction lancée")
+	received := new(bytes.Buffer)
+	_, err := io.Copy(received, conn)
+
+	if err != nil {
+		fmt.Println("Erreur lors de la réception de l'image:", err)
+		return nil, err
+	}
+
+	fmt.Println("Image Reçue.")
+
+	img, _, err := image.Decode(received)
+	if err != nil {
+		fmt.Println("Erreur lors du décodage de l'image:", err)
+		return nil, err
+	}
+
+	return img, err
+}
 
 func Update(rad, xinf, xsup, yinf, ysup int, imgNew *image.RGBA, img image.Image, ch chan int) {
 	//Update est une fonction qui lance la fonction meanPixel (pixel prend la moyenne de couleurs des pixels environnant)
@@ -31,6 +90,7 @@ func Update(rad, xinf, xsup, yinf, ysup int, imgNew *image.RGBA, img image.Image
 		}
 	}
 	ch <- 1
+	fmt.Println("Une goroutine a fini son travail")
 }
 
 func Decoupage(n, width, height int) [][]int {

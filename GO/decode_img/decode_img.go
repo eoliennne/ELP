@@ -7,8 +7,7 @@ import (
 	"os"
 )
 
-// fonction qui ouvre le fichier image et retourne à l'aide de la fonction decode une image
-// du type image.Image du package ainsi que son type
+
 func DecodeImage(filename string) (image.Image, string, error) {
 	file, err := os.Open(filename)
 	if err != nil {
