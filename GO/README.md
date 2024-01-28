@@ -4,15 +4,19 @@
 Notre application permet d'appliquer un flou gaussien à une image au format png, jpeg ou jpg.
 Pour la lancer, il faut lancer le serveur puis lancer le client en renseignant l'image que l'on souhaite affecter et le rayon de flou (maximum 50 pixels).
 
-## Exemple des commandes à utiliser pour tester l'application
+## Commandes à utiliser pour tester l'application
 ##### Pour lancer le serveur de traitement des images
 go run server.go
 
-##### Pour appliquer un flou de rayon 20 pixels à l'image cat.png
-go run client.go cat.png 20
+##### Pour traiter une image 
+go run client.go nom_du_fichier.extension pixels *nom_du_fichier_de_sortie
 
-##### Pour appliquer un flou de rayon 5 pixels à l'image chat.jpg et le récupérer dans chat_flou.png
-go run client.go cat.png 20 chat_flou
+#### Exemples : 
+##### Pour appliquer un flou de rayon 20 pixels à l'image cat.png :
+##### go run client.go cat.png 20
+
+##### Pour appliquer un flou de rayon 5 pixels à l'image chat.jpg et le récupérer dans chat_flou.png : 
+##### go run client.go cat.png 20 chat_flou
 
 
 ## Informations pour les tests
