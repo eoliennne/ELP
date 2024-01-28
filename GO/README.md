@@ -1,7 +1,7 @@
 # GO_ELP
 
 ## Description de l'application
-Notre application permet d'appliquer un flou gaussien à une image au format png, jpeg ou jpg.
+Notre application permet d'appliquer un flou gaussien à une image au format png, jpeg ou jpg.  
 Pour la lancer, il faut lancer le serveur puis lancer le client en renseignant l'image que l'on souhaite affecter et le rayon de flou (maximum 50 pixels).
 
 ## Commandes à utiliser pour tester l'application
@@ -24,10 +24,10 @@ Vous pouvez lancer plusieurs clients en même dans différents terminaux.
 
 Plusieurs images de tests sont disponibles dans la racine du projet :
 
-l'image cat.png qui fait 775x607
-l'image chat.jpg qui fait 622x311
-l'image bigcat.jpeg qui fait 1200x800
-l'image cut_cat.png qui fait 360x360 et a un fond transparent
+l'image cat.png qui fait 775x607  
+l'image chat.jpg qui fait 622x311  
+l'image bigcat.jpeg qui fait 1200x800  
+l'image cut_cat.png qui fait 360x360 et a un fond transparent  
 
 ### Attention !
 L'image créée par le serveur est au format png et a un nom par défaut qui est image_floue.png
