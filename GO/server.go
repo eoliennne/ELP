@@ -114,7 +114,7 @@ func Session(conn net.Conn) {
 	// les routines envoient un au channel 1 lorsqu'elles ont fini leur travail
 	nb_routines := runtime.NumCPU()
 	buffer := nb_routines + 2 // au cas où
-	ch := make(chan []int, buffer)
+	ch := make(chan int, buffer)
 
 	// défintion des parties de l'image qui vont chacune être traitées dans une goroutine
 	tranches := serveurflou.Decoupage(nb_routines, width, height)
@@ -122,7 +122,7 @@ func Session(conn net.Conn) {
 	for t := 0; t < nb_routines; t++ {
 		var xinf, xsup, yinf, ysup int = tranches[t][0], tranches[t][1], tranches[t][2], tranches[t][3]
 
-		go serveurflou.Update(rad, xinf, xsup, yinf, ysup, imgNew, img)
+		go serveurflou.Update(rad, xinf, xsup, yinf, ysup, imgNew, img, ch)
 
 	}
 
@@ -144,5 +144,7 @@ func Session(conn net.Conn) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("Image traitée dans output.png")
 
 }
