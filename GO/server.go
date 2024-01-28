@@ -40,7 +40,7 @@ func main() {
 }
 
 func Reception_flou(conn net.Conn) int {
-	// Reception_flou permet d'obtenir l'information sur à quel point le client veut flouter son image
+	// Reception_flou permet d'obtenir l'information sur le taux de flou souhaité par le client
 	//
 	// Parameters:
 	//   conn (net.Conn): la connexion définie avec le client courant

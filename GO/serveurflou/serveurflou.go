@@ -12,14 +12,15 @@ import (
 	"net"
 )
 
-func EnvoiImage(conn net.Conn, imag image.Image) {
+func EnvoiImage(conn net.Conn, image image.Image) {
 	// EnvoiImage permet de gérer l'envoi d'une image
 	//
 	// Parameters:
 	//   conn (net.Conn): la connexion client/serveur
+	//	 image (image.Image) : l'image que l'on souhaite envoyer
 
 	var buf bytes.Buffer
-	err := png.Encode(&buf, imag)
+	err := png.Encode(&buf, image)
 	if err != nil {
 		fmt.Println("Erreur lors de l'encodage de l'image:", err)
 		return
@@ -35,7 +36,7 @@ func EnvoiImage(conn net.Conn, imag image.Image) {
 }
 
 func Reception_img(conn net.Conn) (image.Image, error) {
-	// Reception permet de gérer la réception de l'image envoyée par le client
+	// Reception_img permet de gérer la réception de l'image envoyée par le client
 	//
 	// Parameters:
 	//   conn (net.Conn): la connexion définie avec le client courant

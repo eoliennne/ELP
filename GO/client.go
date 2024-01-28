@@ -24,6 +24,7 @@ func main() {
 	}
 	defer conn.Close()
 
+	// récupère l'argument correspondant au taux de flou et l'envoie au serveur
 	flou, _ := strconv.Atoi(os.Args[2])
 	if flou > 100 || flou < 1 {
 		fmt.Println("Erreur, le flou demandé est invalide")
@@ -31,6 +32,7 @@ func main() {
 	}
 	EnvoiFlou(conn, flou)
 
+	// envoie l'image à flouter sous format image.Image au serveur
 	img, _, err := decode_img.DecodeImage(os.Args[1])
 	if err != nil {
 		fmt.Println("Erreur lors du décodage de l'image:", err)
