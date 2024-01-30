@@ -1,5 +1,8 @@
 const prompt = require('prompt');
+const joueur = require('./joueur');
+
 prompt.start();
+
 
 // Functions 
 
@@ -31,86 +34,7 @@ function init_sac(){
     return sac
 
 };
-
-function pioche(sac,joueur){
-    joueur.push(sac.pop());
-};
-
-class joueur {
-	constructor(sac,num){
-        this.num = num
-        this.grille=[]
-        for (let i = 0; i < 8; i++) {
-            let lignevide = new Array(9).fill(null);
-            this.grille.push(lignevide);
-        }
-		this.jeu=[]
-        for (let i = 0; i < 6; i++) {
-            this.jeu.push(sac.pop());
-        };}
-
-        nouveaumot(lignei){
-            prompt.get(['mot'], function (err, result) {
-                const ligne = this.grille[lignei]
-                if (err) {
-                  console.error(err);
-                  return;
-                }
-                function check(lettre) {
-                    return ligne.includes(lettre) || jeu.includes(lettre);}
-                //const mot = result.mot;
-
-                let valid = result.mot.split('').every(check);
-              
-            })
-        };
-        
-        
-        afficheChar(char){
-            if (char!=null){
-                process.stdout.write(char + '|');
-            }else{
-                process.stdout.write(' |');
-            }
-                    
-        };
-
-        afficheGrille(){
-            console.log("\nGrille du joueur ",this.num);
-            this.grille.forEach((ligne,i) => {process.stdout.write('\n'+i+'|');
-                                        ligne.forEach(this.afficheChar);
-                                        });
-
-        };
-        
-        afficheDeck(){
-            console.log("\nDeck du joueur ",this.num);
-            this.jeu.forEach(l => process.stdout.write(" "+l));
-        }
-
-
-        //placeholders
-        choixLigne(){
-            return 0
-        }
-
-        tour(){  
-            while (tour==this.num+1){
-                let status = this.nouveaumot(this.choixLigne);
-                if (status=="fini")
-                {
-                    tour = (tour+1) % 2;
-                }else if (status=="OK"){
-                    this.jeu.push(sac.pop()); //pioche 1 lettre
-                }
-            };
-
-        }
-           
-};
-
-            
-            
+    
 
 // start 
 const sac = init_sac();
