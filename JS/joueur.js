@@ -1,3 +1,7 @@
+function tapeMot() {
+    return prompt('Mot : ');
+}
+
 class joueur {
 	constructor(sac,num){
         this.num = num
