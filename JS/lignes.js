@@ -1,7 +1,10 @@
-const prompt = require('prompt');
-prompt.start();
+const prompt = require('prompt-sync')();
 
 //////////////////////////////////
+
+function tapeMot() {
+    return prompt('Mot : ');
+}
 
 const sac = init_sac();
 function shuffleArray(array) {
@@ -48,24 +51,47 @@ class joueur {
 		this.jeu=[]
         for (let i = 0; i < 6; i++) {
             this.jeu.push(sac.pop());
+        
         };}
 
         nouveaumot(lignei){
-            prompt.get(['mot'], function (err, result) {
-                const ligne = this.grille[lignei]
-                if (err) {
-                  console.error(err);
-                  return;
-                }
-                function check(lettre) {
-                    return ligne.includes(lettre) || jeu.includes(lettre);}
-                //const mot = result.mot;
+            const mot = tapeMot();
+            const MOT = mot.toUpperCase();
+            const ligne = this.grille[lignei];
 
-                let valid = result.mot.split('').every(check);
-              
-            })};}
+            // Vérifie si le joueur veut continuer d'entrer des mots
+            if (MOT =="NO"){
+                return "fini";
+            };
+
+            if (mot.length<3 || mot.length>9) {
+                console.error("Veuillez entrez un mot d'au moins trois lettres et de maximum 9 lettres.");
+                this.nouveaumot(lignei)
+                return "ok";
+            }
+
+            const check = (lettre) => {
+                return ligne.includes(lettre) || this.jeu.includes(lettre);
+            };
+
+            let valid = MOT.split('').every(check);
+            console.log(valid)
+
+            if (!valid){
+                console.log("Le mot ne correspond pas aux lettres disponibles!\nEssaie autre chose.");
+                this.nouveaumot(lignei);
+
+            } else {
+                console.log("mot ajouté à la grille")
+                this.grille[lignei] = MOT.split('')
+                console.log(this.grille[lignei])
+                return "ok";
+            };
+                
+            }}
 
 joueur1 = new joueur(sac,0)
+console.log(joueur1.jeu)
 joueur1.nouveaumot(1)
 
 
