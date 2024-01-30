@@ -1,7 +1,7 @@
 const prompt = require('prompt-sync')();
 
 function tapeMot() {
-    return prompt('.');
+    return prompt('>');
 }
 
 class joueur {
@@ -72,6 +72,7 @@ class joueur {
         afficheDeck(){
             console.log("\nDeck du joueur ",this.num);
             this.jeu.forEach(l => process.stdout.write(" "+l));
+            console.log("");
         }
 
 
