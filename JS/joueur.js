@@ -86,20 +86,6 @@ class joueur {
             console.log(num);
             return num;
         }
-
-        tour(){  
-            while (tour==this.num+1){
-                let status = this.nouveaumot(this.choixLigne);
-                if (status=="fini")
-                {
-                    tour = (tour+1) % 2;
-                }else if (status=="OK"){
-                    this.jeu.push(sac.pop()); //pioche 1 lettre
-                }
-            };
-
-        }
-           
 };
 
 module.exports= joueur;
