@@ -71,7 +71,13 @@ class joueur {
 
         //placeholders
         choixLigne(){
-            return 0
+            const num = tapeMot();
+            if (isNaN(num)){
+                console.error("Entre un numéro de ligne entre 0 et 7");
+                this.choixLigne()
+            }
+            console.log(num);
+            return num;
         }
 
         tour(){  
