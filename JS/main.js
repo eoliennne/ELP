@@ -1,6 +1,8 @@
 const prompt = require('prompt');
 prompt.start();
 
+// Functions 
+
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -34,45 +36,114 @@ function pioche(sac,joueur){
     joueur.push(sac.pop());
 };
 
+class joueur {
+	constructor(sac,num){
+        this.num = num
+        this.grille=[]
+        for (let i = 0; i < 8; i++) {
+            let lignevide = new Array(9).fill(null);
+            this.grille.push(lignevide);
+        }
+		this.jeu=[]
+        for (let i = 0; i < 6; i++) {
+            this.jeu.push(sac.pop());
+        };}
+
+        nouveaumot(lignei){
+            prompt.get(['mot'], function (err, result) {
+                const ligne = this.grille[lignei]
+                if (err) {
+                  console.error(err);
+                  return;
+                }
+                function check(lettre) {
+                    return ligne.includes(lettre) || jeu.includes(lettre);}
+                //const mot = result.mot;
+
+                let valid = result.mot.split('').every(check);
+              
+            })
+        };
+        
+        
+        afficheChar(char){
+            if (char!=null){
+                process.stdout.write(char + '|');
+            }else{
+                process.stdout.write(' |');
+            }
+                    
+        };
+
+        afficheGrille(){
+            console.log("\nGrille du joueur ",this.num);
+            this.grille.forEach((ligne,i) => {process.stdout.write('\n'+i+'|');
+                                        ligne.forEach(this.afficheChar);
+                                        });
+
+        };
+        
+        afficheDeck(){
+            console.log("\nDeck du joueur ",this.num);
+            this.jeu.forEach(l => process.stdout.write(" "+l));
+        }
 
 
-// Deroulé
+        //placeholders
+        choixLigne(){
+            return 0
+        }
+
+        tour(){  
+            while (tour==this.num+1){
+                let status = this.nouveaumot(this.choixLigne);
+                if (status=="fini")
+                {
+                    tour = (tour+1) % 2;
+                }else if (status=="OK"){
+                    this.jeu.push(sac.pop()); //pioche 1 lettre
+                }
+            };
+
+        }
+           
+};
+
+            
+            
+
+// start 
 const sac = init_sac();
-let joueur1 = [], joueur2 = [];ligne=[];
 
-tour = 1;
-while (joueur1.length < 6) {pioche(sac,joueur1)};
-tour = 2;
-while (joueur2.length < 6) {pioche(sac,joueur2)};
+joueur1 = new joueur(sac,0);
+joueur2 = new joueur(sac,1);
 
-console.log("joueur 1", joueur1,"joueur 2",joueur2);
+// 1er tour joueur 1 (sans jarnak)
+tour = 1
+joueur1.afficheGrille();
+joueur1.afficheDeck();
+joueur2.afficheDeck();
 
-function jouer_lettre(joueur, ligne,f){
-    prompt.get(['mot'], function (err, result) {
-   
-    if (err) {
-      console.error(err);
-      return;
+
+while (tour==1){
+    let status = joueur1.nouveaumot(joueur1.choixLigne);
+    if (status=="fini")
+    {
+        tour = 2;
+    }else if (status=="ok"){
+        joueur1.jeu.push(sac.pop()); //pioche 1 lettre
     }
+};
 
-    const mot = result.mot;
-    //parcourir le mot lettre par lettre
-
-    if (joueur.includes(lettre) || ligne.includes(lettre)) {
-        f(lettre,ligne);
-    }else{console.log("Tu n'as pas cette lettre");
-        jouer_lettre(joueur,ligne,callback)}
-
-  });}
-
-function enter(mot,ligne){
-    ligne.push(mot) 
-    //enregistrer le mot dans fichier
-
+// alternance des tours
+jeufini = false;
+while(not(jeufini)){
+    joueur2.tour()
+    joueur1.tour()
 }
 
-
-
-
-    
-
+//joueur 2 => jarnak
+//            tire une lettre ou echange 3 de ses lettres
+//            joue jusqu'à fini
+//pioche 1 lettre si nouveau mot
+//continue jusqu'à fini
