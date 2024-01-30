@@ -99,6 +99,22 @@ class joueur {
             };
 
         }
+        choix_pioche(sac){
+            console.log("Souhaitez vous piocher une nouvelle carte ou en échanger trois de votre jeu contre trois nouvelles? (p/e)")
+            choix = tapeMot();
+            if (choix =="p"){
+                this.jeu.push(sac.pop());
+                this.afficheDeck()
+                return;
+            } else if (choix=="e"){
+                // à faire choix_echange(){}
+                this.jeu.push(sac.pop());
+
+            } else {
+                this.choix_pioche(sac)
+            }
+        }
+        choix_echange(){}
            
 };
 
