@@ -1,5 +1,7 @@
+const prompt = require('prompt-sync')();
+
 function tapeMot() {
-    return prompt('Mot : ');
+    return prompt('.');
 }
 
 class joueur {
@@ -75,6 +77,7 @@ class joueur {
 
         //placeholders
         choixLigne(){
+            console.error("Entre un numéro de ligne entre 0 et 7");
             const num = tapeMot();
             if (isNaN(num)){
                 console.error("Entre un numéro de ligne entre 0 et 7");
@@ -98,3 +101,5 @@ class joueur {
         }
            
 };
+
+module.exports= joueur;

@@ -1,8 +1,4 @@
-const prompt = require('prompt');
-const joueur = require('./joueur');
-
-prompt.start();
-
+const joueur = require('./joueur.js');
 
 // Functions 
 
@@ -50,7 +46,7 @@ joueur2.afficheDeck();
 
 
 while (tour==1){
-    let status = joueur1.nouveaumot(joueur1.choixLigne);
+    let status = joueur1.nouveaumot(joueur1.choixLigne());
     if (status=="fini")
     {
         tour = 2;
@@ -61,7 +57,7 @@ while (tour==1){
 
 // alternance des tours
 jeufini = false;
-while(not(jeufini)){
+while(!(jeufini)){
     joueur2.tour()
     joueur1.tour()
 }
