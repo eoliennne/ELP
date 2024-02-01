@@ -1,13 +1,14 @@
 module Main exposing (..)
 
---Test structure
 
 import Browser
 import Html exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Html.Attributes exposing (placeholder,value,style)
+import Html.Attributes exposing (placeholder,value)
 import Http
 import Json.Decode exposing (Decoder, list, map2, string, int, field,at)
+import Random exposing (Generator,generate,constant,int)
+import List.Extra exposing (getAt)
 
 --FONCTIONS
 
@@ -15,11 +16,31 @@ verifSol : String -> Model -> Bool
 verifSol str model = 
     if str==model.current_word.word then True else False
 
-    --a changer : doit retourner un nouveau mot
-new_word : Word
-new_word = {word = "Help", meanings = [{wordtype = "type", definition = ["def2"]}]}
+getWords : Cmd Msg
+getWords =
+    Http.get
+        { url = "http://localhost:5018/thousand_words_things_explainer.txt"
+        , expect = Http.expectString GotList
+        }
 
+getRandomWord : List String -> Random.Generator (Maybe String)
+getRandomWord listeMots =
+    let
+        indexMax = List.length listeMots
+        generateurIndex = Random.int 0 (indexMax - 1)
+    in
+    if indexMax == 0 then
+        Random.constant Nothing
+    else
+        Random.map (\index -> getAt index listeMots) generateurIndex
 
+convertToWord : Maybe String -> Word
+convertToWord mot = 
+    case mot of
+        Just str -> {word = str, meanings = [{wordtype = "type", definition = ["def2"]}]}
+        Nothing -> {word = "word", meanings = [{wordtype = "type", definition = ["def2"]}]}
+
+-- DECODERS
 
 firstDecoder = at ["0"](categoryDecoder)
 
@@ -101,7 +122,12 @@ init _ = (firstModel
 
 
 --UPDATE
-type Msg = GetSol | GetNewWord | CheckAns String | GotData (Result Http.Error Word)
+type Msg = GetSol 
+        | AskWord 
+        | CheckAns String 
+        | GotData (Result Http.Error Word)
+        | GotList (Result Http.Error String)
+        | GotNewWord (Maybe String)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model  =
@@ -109,8 +135,8 @@ update msg model  =
     CheckAns newContent-> ({model | solution = newContent}, Cmd.none)
     GetSol ->  if (verifSol model.solution model) then ({model | statut = Right},Cmd.none)
                     else ({model | statut = Wrong}, Cmd.none)
-    GetNewWord  -> ({model | current_word = new_word, statut = NoSol}, Http.get
-      { url = "https://api.dictionaryapi.dev/api/v2/entries/en/" ++ model.current_word.word
+    GotNewWord newWord -> ({model | current_word = convertToWord newWord, statut = NoSol}, Http.get
+      { url = "https://api.dictionaryapi.dev/api/v2/entries/en/" ++ (convertToWord newWord).word
       , expect = Http.expectJson GotData firstDecoder
       })
     GotData result -> case result of
@@ -119,6 +145,16 @@ update msg model  =
 
           Err probleme ->
             ({model | load = Failure (errorToString probleme)}, Cmd.none)
+
+    AskWord -> (model,getWords)
+    GotList (Ok data) ->
+            let
+                words = String.split " " data 
+                generator = getRandomWord words
+            in
+            ( model, Random.generate GotNewWord generator )
+    GotList (Err _) ->
+        ( model, Cmd.none )
 
 
 --VIEW
@@ -153,7 +189,7 @@ viewField model = div []
         [
         div [] [input [placeholder "Enter a word", value model.solution, onInput CheckAns] []]
         , div [] [button [onClick GetSol] [text "Solution"]]
-        , div [] [button [onClick GetNewWord] [text "Refresh"]]
+        , div [] [button [onClick AskWord] [text "Refresh"]]
          ]
 
 viewSol : Model -> Html Msg
@@ -170,5 +206,5 @@ viewSol model =
 
 --SUBSCRIPTIONS
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     Sub.none
