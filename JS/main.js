@@ -45,6 +45,20 @@ while(!(jeufini)){
 
 // Score
 
-const score = joueur.grille.reduce((somme,ligne) => {const carre = ligne.filter(val => val!== null).length **2;
+const score1 = joueur1.grille.reduce((somme,ligne) => {const carre = ligne.filter(val => val!== null).length **2;
     return somme+carre;},0)
 
+const score2 = joueur2.grille.reduce((somme,ligne) => {const carre = ligne.filter(val => val!== null).length **2;
+    return somme+carre;},0)
+
+console.log("Joueur 1: ",score1);
+
+console.log("Joueur 2: ",score2);
+
+if (score1>score2){
+    console.log("Le joueur 1 a gagné");
+}else if (score2>score){
+    console.log("Le joueur 2 a gagné");
+}else{
+    console.log("Egalité")
+}
