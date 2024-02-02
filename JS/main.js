@@ -36,8 +36,8 @@ function init_sac(){
 // start 
 const sac = init_sac();
 
-const joueur1 = new joueur(sac,0);
-const joueur2 = new joueur(sac,1);
+const joueur1 = new joueur(sac,1);
+const joueur2 = new joueur(sac,2);
 
 // 1er tour joueur 1 (sans jarnak)
 let tour = 1;
@@ -48,6 +48,7 @@ while (tour==1){
 // alternance des tours
 jeufini = false;
 while(!(jeufini)){
+    
     // TOUR JOUEUR 2
     tour = 2
     console.log("/n-------------/nTOUR DU JOUEUR 2")
@@ -56,17 +57,23 @@ while(!(jeufini)){
     joueur2.afficheGrille();
     joueur2.afficheDeck();
 
-        //joueur2.choixPioche(sac)
+    joueur2.choixPioche(sac)
 
-        //jarnak 
+    
     console.log("Jarnak ? o/n")
     const jarnak = moduleJoueur.tapeMot()
     if (jarnak == "o"){
-        while (tour == 2){
-            //tour = jouer(joueur2,tour,true,joueur1)
-        }
-       
+        tour = 1
+        while (tour == 1){
+        tour = jouer(joueur1,tour,true)
+       }
+    
     }
+    else{
+        while (tour==2){
+            tour = jouer(joueur2,tour,false);
+    }
+    
     
     // TOUR JOUEUR 1
 
@@ -76,7 +83,7 @@ while(!(jeufini)){
     joueur2.afficheGrille();
     joueur2.afficheDeck();
 
-        //joueur1.choixPioche(sac)
+    joueur1.choixPioche(sac)
 
         //jarnak
 
@@ -84,33 +91,18 @@ while(!(jeufini)){
         tour = jouer(joueur1,tour);
     };
 }
+}
 
-// function jouer(joueur,tour,jarnak,adversaire){
-//     joueur.afficheGrille();
-//     joueur.afficheDeck();
-
-<<<<<<< HEAD
-    let status = joueur.nouveauMot(joueur.choixLigne());
+function jouer(joueur,tour,jarnak,joueurB){
+    joueur.afficheGrille();
+    joueur.afficheDeck();
+    let status = joueur.nouveauMot(joueur.choixLigne(),jarnak);
     if (status=="fini")
     {
         tour = (tour+1)%2 ;
     }else if (status=="ok"){
         joueur.jeu.push(sac.pop()); //pioche 1 lettre
     }
-=======
-//     if (!jarnak){
-//         let status = joueur.nouveauMot(joueur.choixLigne(),joueur);
-//     }else{
-//         let status = joueur.nouveauMot(joueur.choixLigne(),adversaire);
-//     }
->>>>>>> 5035f3cecd5e1eeeb39ffab08342419d0676ee6b
+    return tour
+}
 
-//     if (status=="fini")
-//     {
-//         tour = (tour+1)%2 ;
-//     }else if (status=="ok"){
-//         joueur.jeu.push(sac.pop()); //pioche 1 lettre
-//     }
-
-//     return tour
-// }

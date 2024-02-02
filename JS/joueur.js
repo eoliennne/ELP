@@ -17,7 +17,7 @@ class joueur {
             this.jeu.push(sac.pop());
         };}
 
-        nouveauMot(lignei,j){
+        nouveauMot(lignei,jarnak){
                        
             const mot = tapeMot();
             const MOT = mot.toUpperCase();
@@ -57,6 +57,7 @@ class joueur {
                 j.grille[lignei] = mot_grille
                 console.log(j.grille[lignei])
 
+                // retire les lettres jouées de la main du joueur
                 for (const lettre of M_O_T){
                     if (!ligne.includes(lettre)){
                         this.remplaceLettre(lettre,sac)
