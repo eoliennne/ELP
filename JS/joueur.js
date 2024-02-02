@@ -122,14 +122,14 @@ class joueur {
             if (choix =="p"){
                 this.jeu.push(sac.pop());
                 this.afficheDeck()
+                fs.appendFileSync("jeu.log",`  Il pioche une nouvelle lettre.\nVoici son jeu : ${this.jeu}\n`,'utf-8')
                 return;
             } else if (choix=="e"){
                 choixEchange(sac);
                 fs.appendFileSync("jeu.log",`  Il échange trois lettres de son jeu contre des lettres de la pioche.\nVoici son jeu : ${this.jeu}.\n`,'utf-8')
 
             } else {
-                this.choix_pioche(sac)
-                fs.appendFileSync("jeu.log",`  Il pioche une nouvelle lettre.\nVoici son jeu : ${this.jeu}\n`,'utf-8')
+                this.choixPioche(sac)
             }
         }
         choixEchange(sac){
