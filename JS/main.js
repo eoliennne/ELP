@@ -1,4 +1,5 @@
-const joueur = require('./joueur.js');
+const moduleJoueur = require('./joueur.js');
+const joueur = moduleJoueur.joueur;
 
 // Functions 
 
@@ -35,64 +36,63 @@ function init_sac(){
 // start 
 const sac = init_sac();
 
-joueur1 = new joueur(sac,0);
-joueur2 = new joueur(sac,1);
+const joueur1 = new joueur(sac,0);
+const joueur2 = new joueur(sac,1);
 
 // 1er tour joueur 1 (sans jarnak)
-tour = 1
+let tour = 1;
 while (tour==1){
-    joueur1.afficheGrille();
-    joueur1.afficheDeck();
-    let status = joueur1.nouveaumot(joueur1.choixLigne());
-    if (status=="fini")
-    {
-        tour = 2;
-    }else if (status=="ok"){
-        joueur1.jeu.push(sac.pop()); //pioche 1 lettre
-    }
+    tour = jouer(joueur1,tour);
 };
 
 // alternance des tours
 jeufini = false;
 while(!(jeufini)){
+    // TOUR JOUEUR 2
     tour = 2
+    console.log("/n-------------/nTOUR DU JOUEUR 2")
     joueur1.afficheGrille();
-    joueur2.afficheGrille();
     joueur1.afficheDeck();
+    joueur2.afficheGrille();
     joueur2.afficheDeck();
 
-    //choixPioche() //choisi de tirer une lettre ou d'en échanger 3
-    //jarnak
+        //joueur2.choixPioche(sac)
 
-    //tour normal
-    while (tour==2){
-        joueur2.afficheGrille();
-        joueur2.afficheDeck();
-
-        let status = joueur2.nouveaumot(joueur2.choixLigne());
-        if (status=="fini")
-        {
-            tour = 1;
-        }else if (status=="ok"){
-            joueur1.jeu.push(sac.pop()); //pioche 1 lettre
-        }
-    };
+        //jarnak 
+    console.log("Jarnak ? o/n")
+    const jarnak = moduleJoueur.tapeMot()
+    if (jarnak == "o"){
+        
+    }
     
+    // TOUR JOUEUR 1
+
+    console.log("/n-------------/nTOUR DU JOUEUR 1")
+    joueur1.afficheGrille();
+    joueur1.afficheDeck();
+    joueur2.afficheGrille();
+    joueur2.afficheDeck();
+
+        //joueur1.choixPioche(sac)
+
+        //jarnak
+
     while (tour==1){
-        joueur1.afficheGrille();
-        joueur1.afficheDeck();
-        let status = joueur1.nouveaumot(joueur1.choixLigne());
-        if (status=="fini")
-        {
-            tour = 2;
-        }else if (status=="ok"){
-            joueur1.jeu.push(sac.pop()); //pioche 1 lettre
-        }
+        tour = jouer(joueur1,tour);
     };
 }
 
-//joueur 2 => jarnak
-//            tire une lettre ou echange 3 de ses lettres
-//            joue jusqu'à fini
-//pioche 1 lettre si nouveau mot
-//continue jusqu'à fini
+function jouer(joueur,tour){
+    joueur.afficheGrille();
+    joueur.afficheDeck();
+
+    let status = joueur.nouveaumot(joueur.choixLigne());
+    if (status=="fini")
+    {
+        tour = (tour+1)%2 ;
+    }else if (status=="ok"){
+        joueur.jeu.push(sac.pop()); //pioche 1 lettre
+    }
+
+    return tour
+}
