@@ -1,12 +1,12 @@
 const moduleJoueur = require('./joueur.js');
 const joueur = moduleJoueur.joueur;
+const fs = require('fs');
 
-// Functions 
+// Fonctions 
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      // Swap array[i] and array[j]
       [array[i], array[j]] = [array[j], array[i]];
     }
 }
@@ -35,11 +35,12 @@ function init_sac(){
 
 // start 
 const sac = init_sac();
-
+const logFile = fs.writeFileSync("jeu.log", "", 'utf-8');
 const joueur1 = new joueur(sac,1);
 const joueur2 = new joueur(sac,2);
 
 // 1er tour joueur 1 (sans jarnak)
+fs.appendFileSync("jeu.log","Tour du joueur 1\n",'utf-8')
 let tour = 1;
 while (tour==1){
     tour = jouer(joueur1,tour);
@@ -50,8 +51,9 @@ jeufini = false;
 while(!(jeufini)){
     
     // TOUR JOUEUR 2
+    fs.appendFileSync("jeu.log","Tour du joueur 2\n",'utf-8')
     tour = 2
-    console.log("/n-------------/nTOUR DU JOUEUR 2")
+    console.log("\n-------------\nTOUR DU JOUEUR 2")
     joueur1.afficheGrille();
     joueur1.afficheDeck();
     joueur2.afficheGrille();
@@ -63,6 +65,7 @@ while(!(jeufini)){
     console.log("Jarnak ? o/n")
     const jarnak = moduleJoueur.tapeMot()
     if (jarnak == "o"){
+        fs.appendFileSync("jeu.log","  Jarnak!\n",'utf-8')
         tour = 1
         while (tour == 1){
         tour = jouer(joueur1,tour,true)
@@ -77,7 +80,8 @@ while(!(jeufini)){
     
     // TOUR JOUEUR 1
 
-    console.log("/n-------------/nTOUR DU JOUEUR 1")
+    console.log("\n-------------\nTOUR DU JOUEUR 1")
+    fs.appendFileSync("jeu.log","Tour du joueur 1\n",'utf-8')
     joueur1.afficheGrille();
     joueur1.afficheDeck();
     joueur2.afficheGrille();
