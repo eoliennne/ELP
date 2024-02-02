@@ -56,13 +56,15 @@ class joueur {
                 let mot_grille = padding(M_O_T)
                 j.grille[lignei] = mot_grille
                 console.log(j.grille[lignei])
+                fs.appendFileSync("jeu.log",`Le joueur ${j.num} ajoute le mot ${MOT} à sa grille. \n`,'utf-8')
 
+                // Remplacement des lettres utilisées du jeu du joueur si elles n'étaient pas déjà sur la ligne
                 for (const lettre of M_O_T){
                     if (!ligne.includes(lettre)){
                         this.remplaceLettre(lettre,sac)
                     }
                 }
-                console.log("mot ajouté à la grille")
+                console.log("Mot ajouté à la grille.")
                 return "ok";
             };
                 
