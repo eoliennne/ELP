@@ -67,10 +67,9 @@ class joueur {
                 for (const lettre of M_O_T){
                     if (!ligne.includes(lettre)){
                         this.enleveLettre(lettre)
-                        this.jeu.push(sac.pop())
                     }
                 }
-                console.log("Mot ajouté à la grille.")
+                console.log("Mot ajouté à la grille.");
                 return "ok";
             };
                 
