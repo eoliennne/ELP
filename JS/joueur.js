@@ -129,16 +129,22 @@ class joueur {
             }
         }
         choixEchange(){
-            let liste_lettres = []
-            valid = true
-            while (valid && liste_lettres.length<3){
-                console.log("Quelle lettre voulez vous échanger?")
-                lettre = tapeMot()
+            let liste_lettres = [];
+            while (liste_lettres.length<3){
+                console.log("Quelle lettre voulez vous échanger?");
+                let temp = tapeMot();
+                let lettre = temp.toUpperCase();
                 if (!this.jeu.includes(lettre)){
-                    
-                }
-
-            }
+                    console.log("Cette lettre n'est pas dans votre main.")
+                } else {
+                    console.log("Très bien! nous enlevons un ",lettre);
+                    liste_lettres.push(lettre);
+                }}
+            
+            for (const enleve of liste_lettres) {
+                this.remplaceLettre(lettre);
+            };
+                
         };
         remplaceLettre(lettre){
             const i = this.jeu.indexOf(lettre);
