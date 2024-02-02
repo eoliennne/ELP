@@ -17,7 +17,7 @@ class joueur {
             this.jeu.push(sac.pop());
         };}
 
-        nouveauMot(lignei,j){
+        nouveauMot(lignei,j,sac){
                        
             const mot = tapeMot();
             const MOT = mot.toUpperCase();
