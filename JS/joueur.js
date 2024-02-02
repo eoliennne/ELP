@@ -56,7 +56,7 @@ class joueur {
                 let mot_grille = padding(M_O_T)
                 j.grille[lignei] = mot_grille
                 console.log(j.grille[lignei])
-                fs.appendFileSync("jeu.log",`Le joueur ${j.num} ajoute le mot ${MOT} à sa grille. \n`,'utf-8')
+                fs.appendFileSync("jeu.log",`  Le joueur ${j.num} ajoute le mot ${MOT} à sa grille. \n`,'utf-8')
 
                 // Remplacement des lettres utilisées du jeu du joueur si elles n'étaient pas déjà sur la ligne
                 for (const lettre of M_O_T){
@@ -124,11 +124,12 @@ class joueur {
                 this.afficheDeck()
                 return;
             } else if (choix=="e"){
-                // à faire choix_echange(){}
-                this.jeu.push(sac.pop());
+                choixEchange(sac);
+                fs.appendFileSync("jeu.log",`  Il échange trois lettres de son jeu contre des lettres de la pioche.\nVoici son jeu : ${this.jeu}.\n`,'utf-8')
 
             } else {
                 this.choix_pioche(sac)
+                fs.appendFileSync("jeu.log",`  Il pioche une nouvelle lettre.\nVoici son jeu : ${this.jeu}\n`,'utf-8')
             }
         }
         choixEchange(sac){
