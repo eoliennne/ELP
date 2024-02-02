@@ -40,9 +40,12 @@ while (tour==2){
 jeufini = false;
 while(!(jeufini)){
     
+    fs.appendFileSync("jeu.log","Tour du joueur 1\n",'utf-8');
+    fs.appendFileSync("jeu.log",` Ses lettres sont : ${joueur1.jeu}\n et sa grille : ${joueur1.grille}\n`,'utf-8');
+    jeufini = moduleJoueur.tourEntier(joueur1,joueur2,sac);
     fs.appendFileSync("jeu.log","Tour du joueur 2\n",'utf-8');
-    jeufini = moduleJoueur.tourEntier(joueur2,joueur1,sac);
-    jeufini = jeufini || moduleJoueur.tourEntier(joueur1,joueur2,sac);
+    fs.appendFileSync("jeu.log",` Ses lettres sont : ${joueur2.jeu}\n et sa grille : ${joueur2.grille}\n`,'utf-8');
+    jeufini = jeufini || moduleJoueur.tourEntier(joueur2,joueur1,sac);
     
 }
 
@@ -57,6 +60,8 @@ const score2 = joueur2.grille.reduce((somme,ligne) => {const carre = ligne.filte
 console.log("Joueur 1: ",score1);
 
 console.log("Joueur 2: ",score2);
+
+fs.appendFileSync("jeu.log",`Les scores finaux sont :\n Joueur 1 : ${score1}\n Joueur 2 : ${score2}\n`,'utf-8');
 
 if (score1>score2){
     console.log("Le joueur 1 a gagné");
