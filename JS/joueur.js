@@ -155,4 +155,7 @@ class joueur {
            
 };
 
-module.exports= joueur;
+module.exports= {
+    joueur : joueur,
+    tapeMot : tapeMot
+};
