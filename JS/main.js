@@ -40,12 +40,9 @@ joueur2 = new joueur(sac,1);
 
 // 1er tour joueur 1 (sans jarnak)
 tour = 1
-joueur1.afficheGrille();
-joueur1.afficheDeck();
-joueur2.afficheDeck();
-
-
 while (tour==1){
+    joueur1.afficheGrille();
+    joueur1.afficheDeck();
     let status = joueur1.nouveaumot(joueur1.choixLigne());
     if (status=="fini")
     {
@@ -58,8 +55,40 @@ while (tour==1){
 // alternance des tours
 jeufini = false;
 while(!(jeufini)){
-    joueur2.tour()
-    joueur1.tour()
+    tour = 2
+    joueur1.afficheGrille();
+    joueur2.afficheGrille();
+    joueur1.afficheDeck();
+    joueur2.afficheDeck();
+
+    //choixPioche() //choisi de tirer une lettre ou d'en échanger 3
+    //jarnak
+
+    //tour normal
+    while (tour==2){
+        joueur2.afficheGrille();
+        joueur2.afficheDeck();
+
+        let status = joueur2.nouveaumot(joueur2.choixLigne());
+        if (status=="fini")
+        {
+            tour = 1;
+        }else if (status=="ok"){
+            joueur1.jeu.push(sac.pop()); //pioche 1 lettre
+        }
+    };
+    
+    while (tour==1){
+        joueur1.afficheGrille();
+        joueur1.afficheDeck();
+        let status = joueur1.nouveaumot(joueur1.choixLigne());
+        if (status=="fini")
+        {
+            tour = 2;
+        }else if (status=="ok"){
+            joueur1.jeu.push(sac.pop()); //pioche 1 lettre
+        }
+    };
 }
 
 //joueur 2 => jarnak
