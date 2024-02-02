@@ -57,6 +57,7 @@ class joueur {
 
                 if (jarnak){
                     lignei = j.choixLigne();
+                    while (this.ligneVide(j.grille[lignei]));
                 }
                 let mot_grille = padding(M_O_T)
                 j.grille[lignei] = mot_grille
@@ -66,7 +67,8 @@ class joueur {
                 // retire les lettres jouées de la main du joueur
                 for (const lettre of M_O_T){
                     if (!ligne.includes(lettre)){
-                        this.remplaceLettre(lettre,sac)
+                        this.enleveLettre(lettre)
+                        this.jeu.push(sac.pop())
                     }
                 }
                 console.log("Mot ajouté à la grille.")
@@ -159,14 +161,16 @@ class joueur {
                 }}
             
             for (const enleve of liste_lettres) {
-                this.remplaceLettre(lettre,sac);
+                this.enleveLettre(lettre);
             };
                 
         };
-        remplaceLettre(lettre,sac){
+        enleveLettre(lettre){
             const i = this.jeu.indexOf(lettre);
             this.jeu.splice(i, 1);
-            this.jeu.push(sac.pop())
+        };
+        ligneVide(ligne){
+            return ligne.every(element => element === null);
         };
         
            
