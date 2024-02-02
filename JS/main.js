@@ -50,55 +50,12 @@ while (tour==1){
 jeufini = false;
 while(!(jeufini)){
     
-    // TOUR JOUEUR 2
     fs.appendFileSync("jeu.log","Tour du joueur 2\n",'utf-8')
+    tourEntier(joueur2,joueur1);
+    tourEntier(joueur1,joueur2);
     
-    console.log("\n-------------\nTOUR DU JOUEUR 2")
-    joueur1.afficheGrille();
-    joueur1.afficheDeck();
-    joueur2.afficheGrille();
-    joueur2.afficheDeck();
-
-    joueur2.choixPioche(sac)
-
-    
-    console.log("Jarnak ? o/n")
-    const jarnak = moduleJoueur.tapeMot()
-    if (jarnak == "o"){
-        fs.appendFileSync("jeu.log","  Jarnak!\n",'utf-8')
-
-        // Le tour se déroule comme si c'était celui de joueur1 
-        // mais les mots sont ajoutés sur la grille du joueur2
-        tour = 1
-        while (tour == 1){
-            tour = jouer(joueur1,tour,true,joueur2);
-       }
-    }
-
-    tour = 2
-    while (tour==2){
-        tour = jouer(joueur2,tour,false,joueur2);
-    
-    
-    
-    // TOUR JOUEUR 1
-
-    console.log("\n-------------\nTOUR DU JOUEUR 1")
-    fs.appendFileSync("jeu.log","Tour du joueur 1\n",'utf-8')
-    joueur1.afficheGrille();
-    joueur1.afficheDeck();
-    joueur2.afficheGrille();
-    joueur2.afficheDeck();
-
-    joueur1.choixPioche(sac)
-
-        //jarnak
-
-    while (tour==1){
-        tour = jouer(joueur1,tour);
-    };
 }
-}
+
 
 function jouer(joueur,tour,jarnak,joueurB){
     // joueur est le joueur dont le deck et les mots sont utilisés
@@ -115,3 +72,31 @@ function jouer(joueur,tour,jarnak,joueurB){
     return tour
 }
 
+function tourEntier(joueur,adversaire){
+    console.log("\n-------------\nTOUR DU JOUEUR",joueur.num)
+    joueur.afficheGrille();
+    joueur.afficheDeck();
+    adversaire.afficheGrille();
+    adversaire.afficheDeck();
+
+    //joueur.choixPioche(sac)
+    
+    console.log("Jarnak ? o/n")
+    const jarnak = moduleJoueur.tapeMot()
+    if (jarnak == "o"){
+        fs.appendFileSync("jeu.log","  Jarnak!\n",'utf-8')
+
+        // Le tour se déroule comme si c'était celui de joueur1 
+        // mais les mots sont ajoutés sur la grille du joueur2
+        tour = adversaire.num;
+        while (tour == adversaire.num){
+            tour = jouer(adversaire,tour,true,joueur);
+       }
+    }
+
+    tour = joueur.num;
+    while (tour==joueur.num){
+        tour = jouer(joueur,tour,false,joueur);    
+    }
+    
+}
