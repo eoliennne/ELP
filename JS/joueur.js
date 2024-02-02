@@ -3,7 +3,7 @@ const fs = require('fs');
 
 function tapeMot() {
     return prompt('>');
-}
+};
 
 class joueur {
 	constructor(sac,num){
@@ -20,10 +20,10 @@ class joueur {
 
         nouveauMot(lignei,jarnak,j){
             console.log("Quel mot souhaitez vous ajouter à la grille?");
+            console.log("Tapez no pour terminer votre tour.");
             const mot = tapeMot();
             const MOT = mot.toUpperCase();
             const ligne = this.grille[lignei];
-            console.log(lignei)
             // Vérifie si le joueur veut continuer d'entrer des mots
             if (MOT =="NO"){
                 return "fini";
