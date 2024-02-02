@@ -53,6 +53,16 @@ while(!(jeufini)){
     fs.appendFileSync("jeu.log","Tour du joueur 2\n",'utf-8')
     tourEntier(joueur2,joueur1);
     tourEntier(joueur1,joueur2);
+
+    if (joueur1.grillePleine()) {
+        jeufini = true;
+        console.log("Le joueur 1 a gagné");
+    }
+    else if (joueur2.grillePleine()) {
+        jeufini = true;
+        console.log("Le joueur 2 a gagné");
+    }
+    
     
 }
 
@@ -79,7 +89,7 @@ function tourEntier(joueur,adversaire){
     adversaire.afficheGrille();
     adversaire.afficheDeck();
 
-    //joueur.choixPioche(sac)
+    joueur.choixPioche(sac)
     
     console.log("Jarnak ? o/n")
     const jarnak = moduleJoueur.tapeMot()

@@ -168,7 +168,14 @@ class joueur {
             this.jeu.splice(i, 1);
             this.jeu.push(sac.pop())
         };
-        
+
+        grillePleine()
+        {
+            if (this.grille.every(ligneVide())){
+                return true;
+            }   
+            return false;
+        };
            
 };
 
