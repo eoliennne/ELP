@@ -56,8 +56,10 @@ class joueur {
                 }
 
                 if (jarnak){
-                    lignei = j.choixLigne();
-                    while (this.ligneVide(j.grille[lignei]));
+                    lignei = new Array(9).fill(null);
+                    while (this.ligneVide(j.grille[lignei])){
+                        lignei= j.choixLigne();
+                    };
                 };
                 let mot_grille = padding(M_O_T);
                 j.grille[lignei] = mot_grille;
