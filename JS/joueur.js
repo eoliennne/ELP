@@ -18,7 +18,7 @@ class joueur {
             this.jeu.push(sac.pop());
         };}
 
-        nouveauMot(lignei,jarnak,sac,j){
+        nouveauMot(lignei,jarnak,j){
             console.log("Quel mot souhaitez vous ajouter à la grille?");
             const mot = tapeMot();
             const MOT = mot.toUpperCase();
@@ -31,7 +31,7 @@ class joueur {
 
             if (mot.length<3 || mot.length>9) {
                 console.error("Veuillez entrez un mot d'au moins trois lettres et de maximum 9 lettres.");
-                return this.nouveauMot(lignei);
+                return this.nouveauMot(lignei,jarnak,j);
             }
             console.log(MOT)
             const check = (lettre) => {
@@ -43,7 +43,7 @@ class joueur {
 
             if (!valid){
                 console.log("Le mot ne correspond pas aux lettres disponibles!\nEssaie autre chose.");
-                this.nouveauMot(lignei);
+                this.nouveauMot(lignei,jarnak,j);
 
             } else {
                 function padding(liste){
@@ -109,7 +109,7 @@ class joueur {
 
         tour(){  
             while (tour==this.num+1){
-                let status = this.nouveauMot(this.choixLigne);
+                let status = this.nouveauMot(this.choixLigne,jarnak,j);
                 if (status=="fini")
                 {
                     tour = (tour+1) % 2;
@@ -171,7 +171,7 @@ class joueur {
 
         grillePleine()
         {
-            if (this.grille.every(ligneVide())){
+            if (this.grille.every(ligne => this.ligneVide(ligne))){
                 return true;
             }   
             return false;
@@ -212,7 +212,7 @@ function jouer(joueur,tour,jarnak,joueurB,sac){
     // joueurB est le joueur qui joue et place les mots sur sa grille
     joueur.afficheGrille();
     joueur.afficheDeck();
-    let status = joueur.nouveauMot(joueur.choixLigne(),jarnak,sac,joueurB);
+    let status = joueur.nouveauMot(joueur.choixLigne(),jarnak,joueurB);
     if (status=="fini")
     {
         tour = (tour+1)%2 ;

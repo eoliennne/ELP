@@ -9,11 +9,14 @@ const joueur1 = new joueur(sac,1);
 const joueur2 = new joueur(sac,2);
 
 // 1er tours 
+console.log("\n-------------\nTOUR DU JOUEUR 1")
 fs.appendFileSync("jeu.log","Tour du joueur 1\n",'utf-8')
 let tour = 1;
 while (tour==1){
     tour = moduleJoueur.jouer(joueur1,tour,false,joueur1,sac);
 };
+
+console.log("\n-------------\nTOUR DU JOUEUR 2");
 
 fs.appendFileSync("jeu.log","Tour du joueur 2\n",'utf-8');
 console.log("Jarnak ? o/n");
