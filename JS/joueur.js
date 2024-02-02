@@ -52,13 +52,13 @@ class joueur {
                         return liste;
                     };
                 }
-                mot_grille = padding(M_O_T)
+                let mot_grille = padding(M_O_T)
                 this.grille[lignei] = mot_grille
                 console.log(this.grille[lignei])
 
                 for (const lettre of M_O_T){
                     if (!ligne.includes(lettre)){
-
+                        this.remplaceLettre(lettre,sac)
                     }
                 }
                 console.log("mot ajouté à la grille")
@@ -128,7 +128,7 @@ class joueur {
                 this.choix_pioche(sac)
             }
         }
-        choixEchange(){
+        choixEchange(sac){
             let liste_lettres = [];
             while (liste_lettres.length<3){
                 console.log("Quelle lettre voulez vous échanger?");
@@ -142,11 +142,11 @@ class joueur {
                 }}
             
             for (const enleve of liste_lettres) {
-                this.remplaceLettre(lettre);
+                this.remplaceLettre(lettre,sac);
             };
                 
         };
-        remplaceLettre(lettre){
+        remplaceLettre(lettre,sac){
             const i = this.jeu.indexOf(lettre);
             this.jeu.splice(i, 1);
             this.jeu.push(sac.pop())

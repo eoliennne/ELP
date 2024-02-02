@@ -86,7 +86,7 @@ function jouer(joueur,tour){
     joueur.afficheGrille();
     joueur.afficheDeck();
 
-    let status = joueur.nouveaumot(joueur.choixLigne());
+    let status = joueur.nouveauMot(joueur.choixLigne());
     if (status=="fini")
     {
         tour = (tour+1)%2 ;
