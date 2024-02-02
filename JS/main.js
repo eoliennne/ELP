@@ -89,7 +89,6 @@ while(!(jeufini)){
 //     joueur.afficheGrille();
 //     joueur.afficheDeck();
 
-<<<<<<< HEAD
     let status = joueur.nouveauMot(joueur.choixLigne());
     if (status=="fini")
     {
@@ -97,13 +96,7 @@ while(!(jeufini)){
     }else if (status=="ok"){
         joueur.jeu.push(sac.pop()); //pioche 1 lettre
     }
-=======
-//     if (!jarnak){
-//         let status = joueur.nouveauMot(joueur.choixLigne(),joueur);
-//     }else{
-//         let status = joueur.nouveauMot(joueur.choixLigne(),adversaire);
-//     }
->>>>>>> 5035f3cecd5e1eeeb39ffab08342419d0676ee6b
+
 
 //     if (status=="fini")
 //     {
