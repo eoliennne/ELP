@@ -122,19 +122,27 @@ class joueur {
 
         }
         choixPioche(sac){
-            console.log("Souhaitez vous piocher une nouvelle carte ou en échanger trois de votre jeu contre trois nouvelles? (p/e)")
-            choix = tapeMot();
-            if (choix =="p"){
+            let choix = tapeMot();
+            let echange_possible = (this.jeu.length>2);
+            if (!echange_possible){
+                console.log("Souhaitez vous piocher une nouvelle carte ou en échanger trois de votre jeu contre trois nouvelles? (p/e)")
+            } else {
+                console.log("Vous n'avez pas assez de cartes pour réaliser un échange, vous piochez une nouvelle carte.")
+            }
+
+            if (!echange_possible || choix =="p"){
                 this.jeu.push(sac.pop());
                 this.afficheDeck()
+                fs.appendFileSync("jeu.log",`  Il pioche une nouvelle lettre.\nVoici son jeu : ${this.jeu}\n`,'utf-8')
                 return;
             } else if (choix=="e"){
                 choixEchange(sac);
                 fs.appendFileSync("jeu.log",`  Il échange trois lettres de son jeu contre des lettres de la pioche.\nVoici son jeu : ${this.jeu}.\n`,'utf-8')
-
-            } else {
-                this.choix_pioche(sac)
-                fs.appendFileSync("jeu.log",`  Il pioche une nouvelle lettre.\nVoici son jeu : ${this.jeu}\n`,'utf-8')
+                return;
+            }
+            else {
+                // cas d'erreur
+                this.choixPioche(sac)
             }
         }
         choixEchange(sac){
