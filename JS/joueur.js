@@ -19,11 +19,11 @@ class joueur {
         };}
 
         nouveauMot(lignei,jarnak,sac,j){
-                       
+            console.log("Quel mot souhaitez vous ajouter à la grille?");
             const mot = tapeMot();
             const MOT = mot.toUpperCase();
             const ligne = this.grille[lignei];
-
+            console.log(lignei)
             // Vérifie si le joueur veut continuer d'entrer des mots
             if (MOT =="NO"){
                 return "fini";
@@ -33,13 +33,13 @@ class joueur {
                 console.error("Veuillez entrez un mot d'au moins trois lettres et de maximum 9 lettres.");
                 return this.nouveauMot(lignei);
             }
-
+            console.log(MOT)
             const check = (lettre) => {
                 return ligne.includes(lettre) || this.jeu.includes(lettre);
             };
-            let M_O_T = MOT.split('')
+            let M_O_T = MOT.split('');
             let valid = M_O_T.every(check);
-            console.log(valid)
+            console.log(valid);
 
             if (!valid){
                 console.log("Le mot ne correspond pas aux lettres disponibles!\nEssaie autre chose.");
@@ -58,10 +58,9 @@ class joueur {
                 if (jarnak){
                     lignei = j.choixLigne();
                     while (this.ligneVide(j.grille[lignei]));
-                }
-                let mot_grille = padding(M_O_T)
-                j.grille[lignei] = mot_grille
-                console.log(j.grille[lignei])
+                };
+                let mot_grille = padding(M_O_T);
+                j.grille[lignei] = mot_grille;
                 fs.appendFileSync("jeu.log",`  Le joueur ${j.num} ajoute le mot ${MOT} à sa grille. \n`,'utf-8')
 
                 // retire les lettres jouées de la main du joueur
@@ -104,10 +103,8 @@ class joueur {
             console.error("Entre un numéro de ligne entre 0 et 7");
             const num = tapeMot();
             if (isNaN(num)){
-                console.error("Entre un numéro de ligne entre 0 et 7");
-                this.choixLigne()
+                return this.choixLigne();
             }
-            console.log(num);
             return num;
         }
 
@@ -126,11 +123,11 @@ class joueur {
         choixPioche(sac){
             let choix = tapeMot();
             let echange_possible = (this.jeu.length>2);
-            if (!echange_possible){
-                console.log("Souhaitez vous piocher une nouvelle carte ou en échanger trois de votre jeu contre trois nouvelles? (p/e)")
+            if (echange_possible){
+                console.log("Souhaitez vous piocher une nouvelle carte ou en échanger trois de votre jeu contre trois nouvelles? (p/e)");
             } else {
-                console.log("Vous n'avez pas assez de cartes pour réaliser un échange, vous piochez une nouvelle carte.")
-            }
+                console.log("Vous n'avez pas assez de cartes pour réaliser un échange, vous piochez une nouvelle carte.");
+            };
 
             if (!echange_possible || choix =="p"){
                 this.jeu.push(sac.pop());
@@ -154,7 +151,7 @@ class joueur {
                 let temp = tapeMot();
                 let lettre = temp.toUpperCase();
                 if (!this.jeu.includes(lettre)){
-                    console.log("Cette lettre n'est pas dans votre main.")
+                    console.log("Cette lettre n'est pas dans votre main.");
                 } else {
                     console.log("Très bien! nous enlevons un ",lettre);
                     liste_lettres.push(lettre);
