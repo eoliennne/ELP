@@ -34,12 +34,21 @@ class joueur {
                 return this.nouveauMot(lignei,jarnak,j);
             }
             console.log(MOT)
+            let M_O_T = MOT.split('');
+
             const check = (lettre) => {
                 return ligne.includes(lettre) || this.jeu.includes(lettre);
             };
-            let M_O_T = MOT.split('');
-            let valid = M_O_T.every(check);
-            console.log(valid);
+            // fonction pour vérifier que le nouveau mot utilise tous les mots de la ligne
+            const recycle = (lettre) => {
+                if (!lettre){
+                    return true;
+                } else {
+                return M_O_T.includes(lettre);
+            }
+            };
+            
+            let valid = M_O_T.every(check) && ligne.every(recycle);
 
             if (!valid){
                 console.log("Le mot ne correspond pas aux lettres disponibles!\nEssaie autre chose.");
@@ -56,6 +65,8 @@ class joueur {
                 }
 
                 if (jarnak){
+                    this.grille[lignei]= new Array(9).fill(null);
+                    console.log("Où voulez-vous placer votre mot volé?");
                     lignei = this.choixLigne();
                     while (!this.ligneVide(j.grille[lignei])){
                         lignei= j.choixLigne();
