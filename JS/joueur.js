@@ -9,7 +9,7 @@ class joueur {
 	constructor(sac,num){
         this.num = num
         this.grille=[]
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 3; i++) {
             let lignevide = new Array(9).fill(null);
             this.grille.push(lignevide);
         }
@@ -36,19 +36,29 @@ class joueur {
             console.log(MOT)
             let M_O_T = MOT.split('');
 
-            const check = (lettre) => {
-                return ligne.includes(lettre) || this.jeu.includes(lettre);
-            };
-            // fonction pour vérifier que le nouveau mot utilise tous les mots de la ligne
-            const recycle = (lettre) => {
+            const recycle = (copieligne,mot,copiejeu) => {
+                let lettre = mot.pop();
                 if (!lettre){
-                    return true;
+                    return true
+                } else if (copieligne.includes(lettre)){
+                    const i = copieligne.indexOf(lettre);
+                    copieligne.splice(i, 1);
+                    return true && recycle(copieligne,mot,copiejeu);
+
+                } else if (copiejeu.includes(lettre)) {
+                    const i = copiejeu.indexOf(lettre);
+                    copiejeu.splice(i, 1);
+                    return true && recycle(copieligne,mot,copiejeu);
+
                 } else {
-                return M_O_T.includes(lettre);
-            }
+                    return false;
+                };
             };
-            
-            let valid = M_O_T.every(check) && ligne.every(recycle);
+
+            let copieligne = Array.from(ligne);
+            let copiejeu = Array.from(this.jeu);
+            let copiemot = Array.from(M_O_T);
+            let valid = recycle(copieligne,copiemot,copiejeu);
 
             if (!valid){
                 console.log("Le mot ne correspond pas aux lettres disponibles!\nEssaie autre chose.");
@@ -109,7 +119,7 @@ class joueur {
             console.log("\nDeck du joueur ",this.num);
             this.jeu.forEach(l => process.stdout.write(" "+l));
             console.log("");
-        }
+        };
 
         choixLigne(){
             console.error("Entre un numéro de ligne entre 0 et 7");
@@ -118,20 +128,7 @@ class joueur {
                 return this.choixLigne();
             }
             return num;
-        }
-
-        tour(){  
-            while (tour==this.num+1){
-                let status = this.nouveauMot(this.choixLigne,jarnak,j);
-                if (status=="fini")
-                {
-                    tour = (tour+1) % 2;
-                }else if (status=="OK"){
-                    this.jeu.push(sac.pop()); //pioche 1 lettre
-                }
-            };
-
-        }
+        };
         choixPioche(sac){
             let choix = tapeMot();
             let echange_possible = (this.jeu.length>2);
@@ -185,11 +182,12 @@ class joueur {
 
         grillePleine()
         {
-            if (this.grille.every(ligne => this.ligneVide(ligne))){
-                return false;
-            }else{
-                return true;
+            for (let ligne of this.grille){
+                if (this.ligneVide(ligne)){
+                    return false;
+                };
             };
+            return true;
         };
            
 };
@@ -243,8 +241,6 @@ function tourEntier(joueur,adversaire,sac){
     joueur.afficheDeck();
     adversaire.afficheGrille();
     adversaire.afficheDeck();
-
-    joueur.choixPioche(sac);
     
     console.log("Jarnak ? o/n");
     const jarnak = tapeMot();
@@ -258,7 +254,7 @@ function tourEntier(joueur,adversaire,sac){
             tour = jouer(adversaire,tour,true,joueur,sac);
        };
     }
-
+    joueur.choixPioche(sac);
     tour = joueur.num;
     while (tour==joueur.num){
         tour = jouer(joueur,tour,false,joueur,sac);    
