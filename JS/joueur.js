@@ -56,8 +56,8 @@ class joueur {
                 }
 
                 if (jarnak){
-                    lignei = new Array(9).fill(null);
-                    while (this.ligneVide(j.grille[lignei])){
+                    lignei = this.choixLigne();
+                    while (!this.ligneVide(j.grille[lignei])){
                         lignei= j.choixLigne();
                     };
                 };
