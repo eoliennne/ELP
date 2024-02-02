@@ -242,13 +242,18 @@ function tourEntier(joueur,adversaire,sac){
         tour = adversaire.num;
         while (tour == adversaire.num){
             tour = jouer(adversaire,tour,true,joueur,sac);
-       }
+       };
     }
 
     tour = joueur.num;
     while (tour==joueur.num){
         tour = jouer(joueur,tour,false,joueur,sac);    
-    }
+    };
+    if (joueur.grillePleine()){
+        return true;
+    } else {
+        return false;
+    };
     
 }
 
