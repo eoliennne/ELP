@@ -17,7 +17,7 @@ while (tour==1){
 
 fs.appendFileSync("jeu.log","Tour du joueur 2\n",'utf-8');
 console.log("Jarnak ? o/n");
-    const jarnak = tapeMot();
+    const jarnak = moduleJoueur.tapeMot();
     if (jarnak == "o"){
         fs.appendFileSync("jeu.log","  Jarnak!\n",'utf-8');
 
@@ -25,7 +25,7 @@ console.log("Jarnak ? o/n");
         // mais les mots sont ajoutés sur la grille du joueur2
         tour = 1;
         while (tour == 1){
-            tour = jouer(joueur1,tour,true,joueur2,sac);
+            tour = moduleJoueur.jouer(joueur1,tour,true,joueur2,sac);
        }
     }
 tour = 2;
@@ -38,17 +38,27 @@ jeufini = false;
 while(!(jeufini)){
     
     fs.appendFileSync("jeu.log","Tour du joueur 2\n",'utf-8');
-    moduleJoueur.tourEntier(joueur2,joueur1,sac);
-    moduleJoueur.tourEntier(joueur1,joueur2,sac);
+    jeufini = moduleJoueur.tourEntier(joueur2,joueur1,sac);
+    jeufini = jeufini || moduleJoueur.tourEntier(joueur1,joueur2,sac);
+    
+}
 
-    if (joueur1.grillePleine()) {
-        jeufini = true;
-        console.log("Le joueur 1 a gagné");
-    }
-    else if (joueur2.grillePleine()) {
-        jeufini = true;
-        console.log("Le joueur 2 a gagné");
-    }
-    
-    
+// Score
+
+const score1 = joueur1.grille.reduce((somme,ligne) => {const carre = ligne.filter(val => val!== null).length **2;
+    return somme+carre;},0)
+
+const score2 = joueur2.grille.reduce((somme,ligne) => {const carre = ligne.filter(val => val!== null).length **2;
+    return somme+carre;},0)
+
+console.log("Joueur 1: ",score1);
+
+console.log("Joueur 2: ",score2);
+
+if (score1>score2){
+    console.log("Le joueur 1 a gagné");
+}else if (score2>score){
+    console.log("Le joueur 2 a gagné");
+}else{
+    console.log("Egalité")
 }
