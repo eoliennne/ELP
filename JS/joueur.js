@@ -17,7 +17,7 @@ class joueur {
             this.jeu.push(sac.pop());
         };}
 
-        nouveaumot(lignei){
+        nouveauMot(lignei){
             const mot = tapeMot();
             const MOT = mot.toUpperCase();
             const ligne = this.grille[lignei];
@@ -29,24 +29,39 @@ class joueur {
 
             if (mot.length<3 || mot.length>9) {
                 console.error("Veuillez entrez un mot d'au moins trois lettres et de maximum 9 lettres.");
-                return this.nouveaumot(lignei);
+                return this.nouveauMot(lignei);
             }
 
             const check = (lettre) => {
                 return ligne.includes(lettre) || this.jeu.includes(lettre);
             };
-
-            let valid = MOT.split('').every(check);
+            let M_O_T = MOT.split('')
+            let valid = M_O_T.every(check);
             console.log(valid)
 
             if (!valid){
                 console.log("Le mot ne correspond pas aux lettres disponibles!\nEssaie autre chose.");
-                this.nouveaumot(lignei);
+                this.nouveauMot(lignei);
 
             } else {
-                console.log("mot ajouté à la grille")
-                this.grille[lignei] = MOT.split('')
+                function padding(liste){
+                    if (liste.length < 9){
+                        liste.push(null);
+                        return padding(liste);
+                    } else {
+                        return liste;
+                    };
+                }
+                mot_grille = padding(M_O_T)
+                this.grille[lignei] = mot_grille
                 console.log(this.grille[lignei])
+
+                for (const lettre of M_O_T){
+                    if (!ligne.includes(lettre)){
+
+                    }
+                }
+                console.log("mot ajouté à la grille")
                 return "ok";
             };
                 
@@ -74,8 +89,6 @@ class joueur {
             this.jeu.forEach(l => process.stdout.write(" "+l));
         }
 
-
-        //placeholders
         choixLigne(){
             console.error("Entre un numéro de ligne entre 0 et 7");
             const num = tapeMot();
@@ -89,7 +102,7 @@ class joueur {
 
         tour(){  
             while (tour==this.num+1){
-                let status = this.nouveaumot(this.choixLigne);
+                let status = this.nouveauMot(this.choixLigne);
                 if (status=="fini")
                 {
                     tour = (tour+1) % 2;
@@ -99,7 +112,7 @@ class joueur {
             };
 
         }
-        choix_pioche(sac){
+        choixPioche(sac){
             console.log("Souhaitez vous piocher une nouvelle carte ou en échanger trois de votre jeu contre trois nouvelles? (p/e)")
             choix = tapeMot();
             if (choix =="p"){
@@ -114,7 +127,24 @@ class joueur {
                 this.choix_pioche(sac)
             }
         }
-        choix_echange(){}
+        choixEchange(){
+            let liste_lettres = []
+            valid = true
+            while (valid && liste_lettres.length<3){
+                console.log("Quelle lettre voulez vous échanger?")
+                lettre = tapeMot()
+                if (!this.jeu.includes(lettre)){
+                    
+                }
+
+            }
+        };
+        remplaceLettre(lettre){
+            const i = this.jeu.indexOf(lettre);
+            this.jeu.splice(i, 1);
+            this.jeu.push(sac.pop())
+        };
+        
            
 };
 
