@@ -136,7 +136,7 @@ class joueur {
                 fs.appendFileSync("jeu.log",`  Il pioche une nouvelle lettre.\nVoici son jeu : ${this.jeu}\n`,'utf-8')
                 return;
             } else if (choix=="e"){
-                choixEchange(sac);
+                this.choixEchange(sac);
                 fs.appendFileSync("jeu.log",`  Il échange trois lettres de son jeu contre des lettres de la pioche.\nVoici son jeu : ${this.jeu}.\n`,'utf-8')
                 return;
             }
@@ -156,10 +156,11 @@ class joueur {
                 } else {
                     console.log("Très bien! nous enlevons un ",lettre);
                     liste_lettres.push(lettre);
-                }}
+                }};
             
             for (const enleve of liste_lettres) {
-                this.enleveLettre(lettre);
+                this.enleveLettre(enleve);
+                this.jeu.push(sac.pop());
             };
                 
         };
@@ -174,9 +175,10 @@ class joueur {
         grillePleine()
         {
             if (this.grille.every(ligne => this.ligneVide(ligne))){
+                return false;
+            }else{
                 return true;
-            }   
-            return false;
+            };
         };
            
 };

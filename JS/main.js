@@ -60,7 +60,7 @@ console.log("Joueur 2: ",score2);
 
 if (score1>score2){
     console.log("Le joueur 1 a gagné");
-}else if (score2>score){
+}else if (score2>score1){
     console.log("Le joueur 2 a gagné");
 }else{
     console.log("Egalité")
