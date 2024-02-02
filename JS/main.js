@@ -43,7 +43,7 @@ const joueur2 = new joueur(sac,2);
 fs.appendFileSync("jeu.log","Tour du joueur 1\n",'utf-8')
 let tour = 1;
 while (tour==1){
-    tour = jouer(joueur1,tour);
+    tour = jouer(joueur1,tour,false,joueur1);
 };
 
 // alternance des tours
@@ -52,7 +52,7 @@ while(!(jeufini)){
     
     // TOUR JOUEUR 2
     fs.appendFileSync("jeu.log","Tour du joueur 2\n",'utf-8')
-    tour = 2
+    
     console.log("\n-------------\nTOUR DU JOUEUR 2")
     joueur1.afficheGrille();
     joueur1.afficheDeck();
@@ -66,16 +66,19 @@ while(!(jeufini)){
     const jarnak = moduleJoueur.tapeMot()
     if (jarnak == "o"){
         fs.appendFileSync("jeu.log","  Jarnak!\n",'utf-8')
+
+        // Le tour se déroule comme si c'était celui de joueur1 
+        // mais les mots sont ajoutés sur la grille du joueur2
         tour = 1
         while (tour == 1){
-        tour = jouer(joueur1,tour,true)
+            tour = jouer(joueur1,tour,true,joueur2);
        }
+    }
+
+    tour = 2
+    while (tour==2){
+        tour = jouer(joueur2,tour,false,joueur2);
     
-    }
-    else{
-        while (tour==2){
-            tour = jouer(joueur2,tour,false);
-    }
     
     
     // TOUR JOUEUR 1
@@ -98,9 +101,11 @@ while(!(jeufini)){
 }
 
 function jouer(joueur,tour,jarnak,joueurB){
+    // joueur est le joueur dont le deck et les mots sont utilisés
+    // joueurB est le joueur qui joue et place les mots sur sa grille
     joueur.afficheGrille();
     joueur.afficheDeck();
-    let status = joueur.nouveauMot(joueur.choixLigne(),jarnak);
+    let status = joueur.nouveauMot(joueur.choixLigne(),jarnak,sac,joueurB);
     if (status=="fini")
     {
         tour = (tour+1)%2 ;

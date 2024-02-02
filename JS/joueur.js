@@ -1,4 +1,5 @@
 const prompt = require('prompt-sync')();
+const fs = require('fs');
 
 function tapeMot() {
     return prompt('>');
@@ -17,7 +18,7 @@ class joueur {
             this.jeu.push(sac.pop());
         };}
 
-        nouveauMot(lignei,jarnak,sac){
+        nouveauMot(lignei,jarnak,sac,j){
                        
             const mot = tapeMot();
             const MOT = mot.toUpperCase();
@@ -52,6 +53,10 @@ class joueur {
                     } else {
                         return liste;
                     };
+                }
+
+                if (jarnak){
+                    lignei = j.choixLigne();
                 }
                 let mot_grille = padding(M_O_T)
                 j.grille[lignei] = mot_grille
