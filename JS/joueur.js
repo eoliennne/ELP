@@ -17,7 +17,8 @@ class joueur {
             this.jeu.push(sac.pop());
         };}
 
-        nouveauMot(lignei){
+        nouveauMot(lignei,j){
+                       
             const mot = tapeMot();
             const MOT = mot.toUpperCase();
             const ligne = this.grille[lignei];
@@ -53,8 +54,8 @@ class joueur {
                     };
                 }
                 let mot_grille = padding(M_O_T)
-                this.grille[lignei] = mot_grille
-                console.log(this.grille[lignei])
+                j.grille[lignei] = mot_grille
+                console.log(j.grille[lignei])
 
                 for (const lettre of M_O_T){
                     if (!ligne.includes(lettre)){

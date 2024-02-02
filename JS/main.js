@@ -62,7 +62,10 @@ while(!(jeufini)){
     console.log("Jarnak ? o/n")
     const jarnak = moduleJoueur.tapeMot()
     if (jarnak == "o"){
-        
+        while (tour == 2){
+            //tour = jouer(joueur2,tour,true,joueur1)
+        }
+       
     }
     
     // TOUR JOUEUR 1
@@ -82,10 +85,11 @@ while(!(jeufini)){
     };
 }
 
-function jouer(joueur,tour){
-    joueur.afficheGrille();
-    joueur.afficheDeck();
+// function jouer(joueur,tour,jarnak,adversaire){
+//     joueur.afficheGrille();
+//     joueur.afficheDeck();
 
+<<<<<<< HEAD
     let status = joueur.nouveauMot(joueur.choixLigne());
     if (status=="fini")
     {
@@ -93,6 +97,20 @@ function jouer(joueur,tour){
     }else if (status=="ok"){
         joueur.jeu.push(sac.pop()); //pioche 1 lettre
     }
+=======
+//     if (!jarnak){
+//         let status = joueur.nouveauMot(joueur.choixLigne(),joueur);
+//     }else{
+//         let status = joueur.nouveauMot(joueur.choixLigne(),adversaire);
+//     }
+>>>>>>> 5035f3cecd5e1eeeb39ffab08342419d0676ee6b
 
-    return tour
-}
+//     if (status=="fini")
+//     {
+//         tour = (tour+1)%2 ;
+//     }else if (status=="ok"){
+//         joueur.jeu.push(sac.pop()); //pioche 1 lettre
+//     }
+
+//     return tour
+// }
